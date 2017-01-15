@@ -1,0 +1,24 @@
+{
+  "name": "node",
+  "version": "1.0.0",
+  "description": "Andela Inverted Index Application for Checkpoint 1 Class 22",
+  "main": "index.html",
+  "scripts": {
+    "test": "gulp"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/andela-f-opara/inverted-index-1.git"
+  },
+  "keywords": [
+    "jasmine",
+    "index",
+    "books"
+  ],
+  "author": "OPARA FEBECHUKWU CHINONYEREM",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/andela-f-opara/inverted-index-1/issues"
+  },
+  "homepage": "https://github.com/andela-f-opara/inverted-index-1#readme"
+}
