@@ -20,5 +20,15 @@
   "bugs": {
     "url": "https://github.com/andela-f-opara/inverted-index-1/issues"
   },
-  "homepage": "https://github.com/andela-f-opara/inverted-index-1#readme"
+  "homepage": "https://github.com/andela-f-opara/inverted-index-1#readme",
+  "devDependencies": {
+    "browser-sync": "^2.18.6",
+    "gulp": "^3.9.1",
+    "gulp-connect": "^5.0.0",
+    "gulp-jasmine-livereload-task": "^0.10.1",
+    "gulp-open": "^2.0.0",
+    "jasmine": "^2.5.3",
+    "jshint": "^2.9.4"
+  }
+
 }
