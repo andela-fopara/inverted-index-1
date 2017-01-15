@@ -1,14 +1,15 @@
+
 //instruct node to look into the node_modules for the package gulp
-var gulp = require ('gulp');
+var gulp = require('gulp');
 
 //add the  gulp-connect dependency
 var connect = require('gulp-connect');
 
 //add the  open dependency require statement
-var open = require('gulp-open');
+var opens = require('gulp-open');
 
 //add the jasmine dependency to actually run the jasmine test suites in .spec files
-var jasmine = require('gulp-jasmine-livereload-task');
+var jasmines = require('gulp-jasmine-livereload-task');
 
 //add dependency for opening
 
@@ -31,7 +32,7 @@ gulp.task('connect', function () {
 //adds task to open the web browser at the webserver
 gulp.task('open', function(){
 	gulp.src('src/index.html')
-	.pipe(open({uri: 'http://localhost:8004/'}));
+	.pipe(opens({uri: 'http://localhost:8004/'}));
 });
 
 //adds task to watch the filesystem and rebuild the project when a change is detected
@@ -66,7 +67,7 @@ gulp.task('js', function(){
 });
 
 //add a default task that uses jasmine to watch for changes in any of our tests suite in the spec file and starts the test
-gulp.task('default', jasmine({
+gulp.task('default', jasmines({
     files: ['./spec/**/*.js'],
     watch: {
         options: {

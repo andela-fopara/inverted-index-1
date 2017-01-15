@@ -6,16 +6,19 @@
     "maxerr"        : 100,    // Maximum error before stopping.
 
     //let jshint know my testing environment
-
     "jasmine": true,
+
+    //lets jshint know the node.js globals
+    "node": true,
 
     // Predefined globals whom JSHint will ignore.
     "browser"       : true,   // Standard browser globals e.g. `window`, `document`.
-
-    "node"          : false,
+    "require"       : true,
+    "node"          : true,
     "rhino"         : false,
     "couch"         : false,
     "wsh"           : true,   // Windows Scripting Host.
+
 
     "jquery"        : true,
     "ender"         : true,
