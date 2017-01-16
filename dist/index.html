@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+<title>Andela Inverted Index Generator</title>
+<link rel="stylesheet" type="text/css" href="css/style.css">
+<link rel="stylesheet" type="text/css" href="css/bootstrap.min.css">
+<script src="inverted-index.js"></script>
+<script src="js/bootstrap.min.js"></script>
+<script src = "https://ajax.googleapis.com/ajax/libs/angularjs/1.3.14/angular.min.js"></script>
+  
+</head>
+
+<body ng-app="">
+
+<div class="container" ng-controller="indexDataController">
+
+<!-- header starts here -->
+	<div class="row">
+		<div class="col-md-12 col-sm-12">
+			 <div class="row">
+
+			 	<div class="col-md-4 col-sm-4">
+			 		<a href="index.html"><img src="images/logo.png" alt="page_logo" /></a>
+			 	</div>
+
+			 	<div class="col-md-8 col-sm-8">
+			 		<h1 class="index_header"> INVERTED INDEX GENERATOR </h1>
+			 	</div>
+			 </div>
+		</div>
+	</div>
+<!-- header ends here -->
+
+<!--body starts here -->
+	<div class="row">
+		<div class="col-md-12 col-sm-12">
+			<div class="row">
+
+			<!-- List of json files start here -->
+				<div class="col-md-3 col-sm-3">
+					<h3 class="sub_title"> List of JSON Files </h3>
+
+					<div class="row file_box" >
+					 	<div class="col-md-12 col-sm-12">
+
+					 	<!-- file upload form starts here -->
+
+					 	<form class="upload_json" name="uploadForm">
+					 	
+					 	<input type="file" class="form-control" ng-model="file_name" name= "myFile" required/>
+
+					 	<button ng-click = "uploadFile()" class="button">Upload Me</button>
+					 	</form>
+
+					 	<!-- file upload form ends here -->
+
+					 	<!-- list starts here -->
+					 	<a href="#" class="file_list">books.json</a>
+					 	<a href="#" class="file_list">andela.json</a>
+					 	<a href="#" class="file_list">elah.json</a>
+					 	<a href="#" class="file_list">phantom.json</a>
+					 	<a href="#" class="file_list">gulp.json</a>
+					 	<a href="#" class="file_list">grunt.json</a>
+
+					 	<!-- list ends here -->
+
+					 	</div>
+					</div>
+				</div>
+				<!-- List of json files ends here -->
+
+				<!-- Index starts here -->
+				<div class="col-md-6 col-sm-6">
+					<h3 class="sub_title"> Index </h3>
+					<!-- generated index table starts -->
+					<div style="overflow-x:auto">
+						<table>
+							<tr>
+								<th> Term </th>
+								<th> Doc_1 </th>
+								<th> Doc_2 </th>
+								<th> Doc_3 </th>
+								<th> Doc_n</th>
+							</tr>
+							<tr>
+								<td> Quick </td>
+								<td> </td>
+								<td> X </td>
+								<td> X </td>
+								<td> </td>
+							</tr>
+							<tr>
+								<td> Quick </td>
+								<td> </td>
+								<td> X </td>
+								<td> X </td>
+								<td> </td>
+							</tr>
+							<tr>
+								<td> Quick </td>
+								<td> </td>
+								<td> X </td>
+								<td> X </td>
+								<td> </td>
+							</tr>
+							<tr>
+								<td> Quick </td>
+								<td> </td>
+								<td> X </td>
+								<td> X </td>
+								<td> </td>
+							</tr>
+							<tr>
+								<td> Quick </td>
+								<td> </td>
+								<td> X </td>
+								<td> X </td>
+								<td> </td>
+							</tr>
+							<tr>
+								<td> Quick </td>
+								<td> </td>
+								<td> X </td>
+								<td> X </td>
+								<td> </td>
+							</tr>
+							<tr>
+								<td> Quick </td>
+								<td> </td>
+								<td> X </td>
+								<td> X </td>
+								<td> </td>
+							</tr>
+							<tr>
+								<td> Quick </td>
+								<td> </td>
+								<td> X </td>
+								<td> X </td>
+								<td> </td>
+							</tr>
+							<tr>
+								<td> Quick </td>
+								<td> </td>
+								<td> X </td>
+								<td> X </td>
+								<td> </td>
+							</tr>
+						</table>
+					</div>
+
+					<!-- generated inde tables ends here -->
+				</div>
+				<!-- Index ends here -->
+
+				<!-- Search starts here -->
+				<div class="col-md-3 col-sm-3">
+					<h3 class="sub_title"> Search </h3>
+					<!-- search form -->
+
+						<input type="text" name="search_words" id="search_words" placeholder="Enter words to search" class="form-control search" ng-model="search_strings" required>
+
+						<button ng-click = "uploadFile()" class="button">Search Index</button>
+
+
+					<div style="overflow-x:auto">
+						<table>
+							<tr>
+								<th> Term </th>
+								<th> Doc_1 </th>
+								<th> Doc_2 </th>
+								<th> Doc_3 </th>
+								<th> Doc_n</th>
+							</tr>
+							<tr>
+								<td> Quick </td>
+								<td> </td>
+								<td> X </td>
+								<td> X </td>
+								<td> </td>
+							</tr>
+							<tr>
+								<td> Quick </td>
+								<td> </td>
+								<td> X </td>
+								<td> X </td>
+								<td> </td>
+							</tr>
+							<tr>
+								<td> Quick </td>
+								<td> </td>
+								<td> X </td>
+								<td> X </td>
+								<td> </td>
+							</tr>
+							<tr>
+								<td> Quick </td>
+								<td> </td>
+								<td> X </td>
+								<td> X </td>
+								<td> </td>
+							</tr>
+							<tr>
+								<td> Quick </td>
+								<td> </td>
+								<td> X </td>
+								<td> X </td>
+								<td> </td>
+							</tr>
+							<tr>
+								<td> Quick </td>
+								<td> </td>
+								<td> X </td>
+								<td> X </td>
+								<td> </td>
+							</tr>
+							<tr>
+								<td> Quick </td>
+								<td> </td>
+								<td> X </td>
+								<td> X </td>
+								<td> </td>
+							</tr>
+							<tr>
+								<td> Quick </td>
+								<td> </td>
+								<td> X </td>
+								<td> X </td>
+								<td> </td>
+							</tr>
+							<tr>
+								<td> Quick </td>
+								<td> </td>
+								<td> X </td>
+								<td> X </td>
+								<td> </td>
+							</tr>
+						</table>
+					</div>
+
+				</div>
+				<!-- Search ends here -->
+
+			</div>
+		</div>
+
+<!-- footer starts here -->
+
+		<div class="col-md-12 col-sm-12 footer">
+		<p class="copyright"> &copy Andela Talent Accelerators </p>
+		</div>
+<!-- footer ends here -->
+
+	</div>
+<!-- body ends here -->
+
+</div>
+
+<!-- container ends here -->
+
+
+</body>
+</html>
