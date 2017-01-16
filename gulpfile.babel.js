@@ -13,11 +13,14 @@ import opens from 'gulp-open';
 
 //import opens from 'gulp-open';
 
-//add the jasmine dependency to actually run the jasmine test suites in .spec files
+//add the jasmine dependency to actually 
+//run the jasmine test suites in .spec files
 import jasmines from 'gulp-jasmine-livereload-task';
 
-//import jasmines from 'gulp-jasmine-livereload-task';
-//add dependency for opening
+//add the coveralls dependency
+//for code test coverage
+import coveralls from 'gulp-coveralls';
+
 
 //we start writing our gulp task
 //test with hello
@@ -86,9 +89,18 @@ gulp.task('default', jasmines({
 
 }));
 
+//Run 'gulp coveralls' to
+//send data to coveralls
+gulp.task('coveralls', () => {
+  if (!process.env.CI){
+  	return;
+  }
 
+  return gulp.src('./coverage/lcov.info')
+    .pipe(coveralls());
+});
 
 //enables us to run the gulp test with just a gulp command
-gulp.task('default', ['connect','open','watch','html','css','js']);
+gulp.task('default', ['connect','open','watch','html','css','js','coveralls']);
 
 
