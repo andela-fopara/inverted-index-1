@@ -1,27 +1,29 @@
-
 //instruct node to look into the node_modules for the package gulp
-var gulp = require('gulp');
+//var gulp = require('gulp');
+import gulp from 'gulp';
 
 //add the  gulp-connect dependency
-var connect = require('gulp-connect');
+//var connect = require('gulp-connect');
+import connect from 'gulp-connect';
 
 //add the  open dependency require statement
-var opens = require('gulp-open');
+//var opens = require('gulp-open');
+import opens from 'gulp-open';
 
 //add the jasmine dependency to actually run the jasmine test suites in .spec files
-var jasmines = require('gulp-jasmine-livereload-task');
-
+//var jasmines = require('gulp-jasmine-livereload-task');
+import jasmines from 'gulp-jasmine-livereload-task';
 //add dependency for opening
 
 //we start writing our gulp task
 //test with hello
-gulp.task('hello', function(){
+gulp.task('hello', () => {
 		//statements for the task goes here
 		console.log('Hello Zell');
 	});
 
 //the connect task to create a webserver running on http://localhost:8001
-gulp.task('connect', function () {
+gulp.task('connect', () => {
     connect.server({
         root: 'src',
         port: 8004,
@@ -30,13 +32,13 @@ gulp.task('connect', function () {
 });
 
 //adds task to open the web browser at the webserver
-gulp.task('open', function(){
+gulp.task('open', () => {
 	gulp.src('src/index.html')
 	.pipe(opens({uri: 'http://localhost:8004/'}));
 });
 
 //adds task to watch the filesystem and rebuild the project when a change is detected
-gulp.task('watch',function(){
+gulp.task('watch',() => {
 	gulp.watch('./src/*.html',['html']);
 	gulp.watch('./src/**/*.css',['css']);
 	gulp.watch('./src/**/*.js',['js']);
@@ -44,7 +46,7 @@ gulp.task('watch',function(){
 
 //adds a task to refresh our page automatically when there is a html file file edit
 //remember to add a piped connect.reload() to the css task and any other build task present in our project
-gulp.task('html', function(){
+gulp.task('html', () => {
 	gulp.src('./src/*.html')
 	.pipe(gulp.dest('./dist'))
 	.pipe(connect.reload());
@@ -52,7 +54,7 @@ gulp.task('html', function(){
 
 //adds a task to refresh our page automatically when there is a html file file edit
 //remember to add a piped connect.reload() to the css task and any other build task present in our project
-gulp.task('css', function(){
+gulp.task('css', () => {
 	gulp.src('./src/css/*.css')
 	.pipe(gulp.dest('./dist'))
 	.pipe(connect.reload());
@@ -60,7 +62,7 @@ gulp.task('css', function(){
 
 //adds a task to refresh our page automatically when there is a html file file edit
 //remember to add a piped connect.reload() to the css task and any other build task present in our project
-gulp.task('js', function(){
+gulp.task('js', () => {
 	 gulp.src('./src/js/*.js')
 	.pipe(gulp.dest('./dist'))
 	.pipe(connect.reload());
@@ -84,3 +86,4 @@ gulp.task('default', jasmines({
 
 //enables us to run the gulp test with just a gulp command
 gulp.task('default', ['connect','open','watch','html','css','js']);
+

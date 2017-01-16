@@ -8,13 +8,11 @@
     //let jshint know my testing environment
     "jasmine": true,
 
-    //lets jshint know the node.js globals
-    "node": true,
-
     // Predefined globals whom JSHint will ignore.
     "browser"       : true,   // Standard browser globals e.g. `window`, `document`.
     "require"       : true,
     "node"          : true,
+    "angular"       : true,
     "rhino"         : false,
     "couch"         : false,
     "wsh"           : true,   // Windows Scripting Host.
