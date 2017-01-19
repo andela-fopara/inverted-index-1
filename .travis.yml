@@ -5,4 +5,13 @@ node_js:
   - "5.11"
   - "4.5"
   - "4.4"
+  - "0.10"
+
+#disable pesky email notification
+notifications:
+  email:false
+
+#Run 'gulp coveralls' to send data to Coveralls
+after_script:
+  - /node_modules/.bin/gulp coveralls
 

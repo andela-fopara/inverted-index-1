@@ -99,10 +99,11 @@ describe("Search index", function() {
 	//the function
 	//to read the json
 	//file
-	invertedIndex.createIndex("./spec/books.json");
+	invertedIndex.createIndex("books.json");
 
 	// run a search
-	let searchResult = invertedIndex.search(['Alice',['unusual','Fellowship'],'Lord']);
+	let searchResult = invertedIndex.search(['Alice','Lord',['unusual','Fellowship']]);
+
 
   it("assert that search returns an array of indices of the correct objects that contain the words in the search query - File Name not specified", function() {
   	// call the areAllValidIndex

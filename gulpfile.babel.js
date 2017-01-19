@@ -5,6 +5,7 @@ import gulp from 'gulp';
 
 //add the  gulp-connect dependency
 import connect from 'gulp-connect';
+//import connect2 from 'gulp-connect';
 
 //import connect from 'gulp-connect';
 
@@ -20,6 +21,18 @@ import jasmines from 'gulp-jasmine-livereload-task';
 //add the coveralls dependency
 //for code test coverage
 import coveralls from 'gulp-coveralls';
+
+//add dependency needed
+//to run jasmine tests
+//via gulp 
+import jasmine from 'gulp-jasmine';
+import jasmineBrowser from 'gulp-jasmine-browser';
+import watch from 'gulp-watch';
+
+//add babel register
+//so that code can 
+//be transpiled to es5
+import babel_register from 'babel-core/register';
 
 
 //we start writing our gulp task
@@ -38,17 +51,32 @@ gulp.task('connect', () => {
     });
 });
 
-//adds task to open the web browser at the webserver
+//adds task to open the 
+//web browser at 
+//the webserver
+//for front-end test
+
 gulp.task('open', () => {
-	gulp.src('src/index.html')
-	.pipe(opens({uri: 'http://localhost:8004/'}));
+  gulp.src('./src/index.html')
+  .pipe(opens({uri: 'http://localhost:8004/'}));
 });
+
+
+
+
 
 //adds task to watch the filesystem and rebuild the project when a change is detected
 gulp.task('watch',() => {
 	gulp.watch('./src/*.html',['html']);
 	gulp.watch('./src/**/*.css',['css']);
 	gulp.watch('./src/**/*.js',['js']);
+  gulp.watch('./jasmine/SpecRunner.html',['specRunner']);
+});
+
+gulp.task('specRunner', () => {
+  gulp.src('./jasmine/SpecRunner.html')
+  .pipe(gulp.dest('./dist'))
+  .pipe(connect.reload());
 });
 
 //adds a task to refresh our page automatically when there is a html file file edit
@@ -75,19 +103,15 @@ gulp.task('js', () => {
 	.pipe(connect.reload());
 });
 
-//add a default task that uses jasmine to watch for changes in any of our tests suite in the spec file and starts the test
-gulp.task('default', jasmines({
-    files: ['./spec/**/*.js'],
-    watch: {
-        options: {
-            debounceTimeout: 1000, //The number of milliseconds to debounce. 
-            debounceImmediate: true //This option when set will issue a callback on the first event. 
-        }
-    },
-    host: 'localhost',
-    port: 8004,
+gulp.task('ty', ()=> {
+  var filesForTest = ['./src/js/inverted-index.js', './jasmine/spec/inverted-index-test.js'] 
+  return gulp.src(filesForTest)
+   .pipe(watch(filesForTest))
+    .pipe(jasmineBrowser.specRunner())
+   .pipe(jasmineBrowser.server({port: 8888}));
 
-}));
+});
+
 
 //Run 'gulp coveralls' to
 //send data to coveralls
@@ -101,6 +125,6 @@ gulp.task('coveralls', () => {
 });
 
 //enables us to run the gulp test with just a gulp command
-gulp.task('default', ['connect','open','watch','html','css','js','coveralls']);
+gulp.task('default', ['connect','open','watch','html','css','js','coveralls','specRunner']);
 
 
