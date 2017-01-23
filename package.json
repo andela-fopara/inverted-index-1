@@ -5,7 +5,7 @@
   "main": "index.html",
   "scripts": {
     "test": "node node_modules/gulp/bin/gulp default",
-    "start": "node node_modules/gulp/bin/gulp",
+    "start": "node node_modules/gulp/bin/gulp"
   },
   "repository": {
     "type": "git",
