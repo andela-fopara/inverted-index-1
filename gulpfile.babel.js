@@ -104,7 +104,8 @@ gulp.task('js', () => {
 });
 
 gulp.task('ty', ()=> {
-  var filesForTest = ['./src/js/inverted-index.js', './jasmine/spec/inverted-index-test.js'] 
+  var filesForTest = ['./src/js/inverted-index.js', './jasmine/spec/inverted-index-test.js'];
+
   return gulp.src(filesForTest)
    .pipe(watch(filesForTest))
     .pipe(jasmineBrowser.specRunner())

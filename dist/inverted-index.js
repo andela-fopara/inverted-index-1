@@ -1,494 +1,323 @@
-export class InvertedIndex{
+/** Class representing an Inverted Index */
 
-	//constructor method
-	//initializes
-	//instance variables
-  constructor() {
+class InvertedIndex {
 
-  	//default is 
-  	//our books.json
-    this.jsonFile = 'books.json';
-    this.books = null;
-    this.objectMap = null;
-    this.index = {};
-
-  }
+    /**
+     * Create an inverted index.
+     */
+    constructor() {
 
 
-  //function to actually
-  //create the index
-  //of the app but
-  //reads the file first
-  //before index generation
-  createIndex(filePath){
+        //assume that file
+        //has been read
+        //and books is set
+        this.books = [];
 
-    //set the jsonFile Instance variable
-    this.jsonFile = filePath;
+        this.objectMap = {};
+        this.index = {};
 
-    //call function to read file
-    //and set the books instance variable
-    this.readFile(this.jsonFile, function(response) {
+        //searchWord for search
+        this.searchWord = [];
+        this.searchOutput = [];
 
-        let actual_JSON = JSON.parse(response);
-        this.books = actual_JSON;
-    });
+        this.mostFrequency = 0;
 
-    //start index generation
+    }
 
-    //first call map 
-    //creator function
-    this.createMap();
+    /**
+     * Create an Index.
+     * @param {array} file_object
+     */
 
-    //call function that 
-    //generates the index
-    this.generateIndex();
+    createIndex(file_object) {
 
-  }
+        if (file_object.length > 0) {
+            this.books = file_object;
 
-  //function to read
-  //the json file
-  readFile(file, callback){
+            this.generateIndex();
+        }
 
-    let xobj = new XMLHttpRequest();
-    xobj.overrideMimeType("application/json");
-    xobj.open('GET', file, true); 
-    xobj.onreadystatechange = function () {
-          if (xobj.readyState == 4 && xobj.status == "200") {
-            // Required use of an anonymous callback as .open will NOT return a value but simply returns undefined in asynchronous mode
-            callback(xobj.responseText);
-          }
-    };
-    xobj.send(null);
+    }
 
 
-  }
+    /**
+     * Create a map.
+     */
+    createMap() {
 
-  //function that maps
-  //objects in the json
-  //file to the 
-  //appropriate keys
-  createMap(){
+        if (!this.isEmpty()) {
 
-    //maps the string keys 
-    //to the correct object
-    // if the it is not empty and 
-    // contains an array
-    if(!this.isEmpty()){
+            const key = "doc";
+            let keyy = "";
+            for (let i = 0; i <= this.books.length - 1; i++) {
+                keyy = key + (i + 1);
+                this.objectMap[keyy] = this.books[i];
 
-      //stores the result of the map
-      let object = { };
+            }
+        }
 
-      const key = "doc";
+    }
 
-      for (let i = 0; i <= this.books.length - 1; i++) {
-          key = key+(i+1);
-          object[key] = books[i];
+    /**
+     * Checks if this.books is empty.
+     * @return {boolean} The status value.
+     */
 
-      }
-      //assign generated object
-      //from map to our
-      //instance variable
-      this.objectMap = object;
+    isEmpty() {
+        let status = true;
+
+        if (this.books.length > 0)
+            status = false;
+
+        return status;
+    }
+
+    /**
+     * Generates index.
+     */
+
+    generateIndex() {
+
+        let index = {};
+
+        let title = [];
+
+        let text = [];
+
+        let mostFrequency = 0;
+
+        for (let i = 0; i < this.books.length; i++) {
+
+            let obj = this.books[i];
+
+            title = this.removePunctuation(obj.title).split(" ");
+
+            text = this.removePunctuation(obj.text).split(" ");
+
+            for (let j = 0; j < title.length; j++) {
+
+                title[j] = title[j].toLowerCase();
+
+                if (index[title[j]] !== undefined && index[title[j]].includes(i + 1)) {
+                    continue;
+                } else {
+
+                    if (index[title[j]] == undefined) {
+                        index[title[j]] = [];
+                    }
+
+                    index[title[j]].push(i + 1);
+
+                    if (index[title[j]].length > mostFrequency) {
+                        mostFrequency = index[title[j]].length;
+                    }
+
+                }
+
+
+            }
+
+            for (let j = 0; j < text.length; j++) {
+
+                text[j] = text[j].toLowerCase();
+
+                //if word has already
+                //been indexed
+                if (index[text[j]] !== undefined && index[text[j]].includes(i + 1)) {
+                    continue;
+                } else {
+
+                    if (index[text[j]] == undefined) {
+                        index[text[j]] = [];
+                    }
+
+                    index[text[j]].push(i + 1);
+
+                    if (index[text[j]].length > mostFrequency) {
+                        mostFrequency = index[text[j]].length;
+                    }
+
+                }
+
+            }
+
+        }
+
+        this.index = index;
+        this.mostFrequency = mostFrequency;
+
+    }
+
+    /**
+     * Gets the Index.
+     * @param {string} document_key - The document_key value, which is optional.
+     * @return {object} The index value.
+     */
+    getIndex(document_key) {
+
+        if (!document_key === undefined) {
+
+            let tempObjectMap = {};
+
+            tempObjectMap[document_key] = this.objectMap[document_key];
+
+            this.objectMap = tempObjectMap;
+
+            this.generateIndex();
+
+            return this.index;
+        } else {
+            return this.index
+        }
+    }
+
+    /**
+     *Search an Index or file for keyword.
+     * @param {string} filename - The file to perform search on.
+     * @param {array} terms - The terms value.
+     * @return {array} The searchOutput value.
+     */
+    search(filename, ...terms) {
+        let searchResult = [];
+        let termWord = [];
+
+        if (filename !== undefined && terms.length > 0) {
+
+            this.createIndex(filename);
+        } else {
+            terms = filename;
+        }
+
+        terms = this.removePunctuation(terms[0]).split(" ");
+
+        for (let i = 0; i < terms.length; i++) {
+
+            if (searchResult !== [] && searchResult[i] !== undefined) {
+                continue;
+            }
+
+
+
+            if (this.index[terms[i]]) {
+                searchResult.push(this.index[terms[i]]);
+            } else {
+                searchResult.push([]);
+            }
+
+            termWord.push(terms[i]);
+
+        }
+
+        this.searchWord = termWord;
+
+        this.searchOutput = searchResult;
+
+        return this.searchOutput;
 
 
     }
-  }
-
-//checks that 
-//instance variable
-//was instantiated 
-//on file read and
-//that file read
-//isn't empty
-  isEmpty(){
-  	if(this.books !== null && this.books.length > 0)
-  		return false;
-  	else
-  		return true;
-  }
-
-  generateIndex(){
-  		//stores the generated index
-		let index = {};
-
-		//stores the title words
-		//during index generation
-		let title = [];
-
-		//stores the test words
-		//during index generation
-		let text = [];
-
-		//key prefix to access
-		//map objects
-		const key = "doc";
-
-		let keyy = "";
-
-		for (let i = 0; i < this.objectMap.length; i++) {
-
-			//generate a fully defined key
-			//for a specific element
-			//in object
-			keyy = key+(i+1);
-
-			//get the current object
-			const obj = this.objectMap.keyy;
-
-			//split the title
-			//of book into
-			//individual words
-			title = obj.title.split("");
-
-			//split the text of
-			//book into individual words
-			text = obj.text.split("");
-
-			//map title words to the
-			//currect document key
-			for (let j = 0; j < title.length; j++) {
-				//if word has already
-				//been indexed
-
-				if(index[title[j]]){
-					//check if it is
-					//indexed in same
-					//document as this
-					let doc_list = index[title[j]].split("");
-
-					if(doc_list.indexOf(keyy)){
-						//continue with
-						//the next word,
-						//word has been
-						//indexed to be
-						//on this doc
-						continue;
-					}
-					else{
-						//word hasn't been
-						//indexed to be
-						//on this document
-						//so add the document
-						index[title[j]] = `${index[title[j]]} ${keyy}`;
-					}
-				}
-				else{
-					//word hasn't been
-					//indexed on this
-					//document
-					//so index it for the
-					//first time
-					//key stores the
-					//document id
-					//which is also
-					//the string key
-					//in the object
-					//map
-					index[title[j]] = keyy;
-
-				}
-
-			}
 
 
-			}
+    /**
+     * Check if index was created.
+     * @return {boolean} The true/false value.
+     */
+    isIndexCreated() {
+        if (this.index !== {}) {
+            return true;
+        } else {
+            return false;
+        }
 
-			//map text words to the
-			//currect document key
-			for (let j = 0; j < text.length; j++) {
-				//if word has already
-				//been indexed
-				if(index[text[j]]){
-					//check if it is
-					//indexed in same
-					//document as this
-					let doc_lists = index[text[j]].split("");
+    }
 
-					if(doc_list.indexOf(keyy)){
-						//continue with
-						//the next word,
-						//word has been
-						//indexed to be
-						//on this doc
-						continue;
-					}
-					else{
-						//word hasn't been
-						//indexed to be
-						//on this document
-						//so add the document
-						index[text[j]] = `${index[text[j]]} ${keyy}`;
-					}
-				}
-				else{
-					//word hasn't been
-					//indexed on this
-					//document
-					//so index it for the
-					//first time
-					//key stores the
-					//document id
-					//which is also
-					//the string key
-					//in the object
-					//map
-					index[text[j]] = keyy;
+    /**
+     * Verify that each word is mapped to the correct document.
+     * @param {array} rightMap - The rightMap value.
+     * @return {boolean} The status value.
+     */
+    isMapCorrect(rightMap) {
 
-				}
-			}
+        let status = false;
 
-		//index fully generated
-		//set the index
-		//instance variable
-		this.index = index;
+        for (let i = 0; i < this.getObjectSize(rightMap); i++) {
+            if (rightMap[i] == this.objectMap[i]) {
+                status = true;
+            } else {
+                status = false;
 
-		}
+                break;
+            }
 
-		//document_key
-		//can be undefined
-		//indicating we want
-		//the index of the
-		//content of the
-		// json file
-		getIndex(document_key){
+        }
 
-			if(!document_key === undefined){
-				//initialize objectMap to 
-				//contain only the document
-				//key
-				let tempObjectMap = {};
+        return status;
 
-				tempObjectMap[document_key] = this.objectMap[document_key];
+    }
 
-				this.objectMap = tempObjectMap;
+    /**
+     * Check that index generated from search is correct.
+     * @param {array} searchResult - The searchResult value.
+     * @return {boolean} The status value.
+     */
+    areAllValidIndex(searchResult) {
 
-				this.generateIndex();
+        let status = false;
 
-				return this.index;
-			}
-			else{
-				return this.index
-			}
-		}
+        for (let i = 0; i < searchResult.length; i++) {
 
-		searchIndex(filename, ...terms){
-			let searchResult = [];
-			let searchResultSuper = [];
-			let termWord = [];
+            if (typeof(searchResult[i]) === typeof([])) {
+                for (let j = 0; j < searchResult[j].length; j++) {
 
-			//check if filename
-			//parameter
-			//is truely passed
-			if(!filename === undefined){
+                    if (this.books[searchResult[i][j]] !== undefined) {
+                        status = true;
+                    } else {
+                        status = false;
 
-				//a new file name 
-				//is passed, so don't
-				//use default
-				//we call 
-				//createIndex first
-				this.createIndex(filename);
+                        break;
+                    }
+                }
+            } else {
 
-				//index now exist 
-				//we can continue 
-				//with other stuffs
+                if (typeof(searchResult[i][j]) === typeof(0)) {
+                    status = true;
+                } else {
+                    status = false;
 
-			}
+                    break;
+                }
+            }
+        }
+        return status;
+    }
 
-			//rest of code
-			//to run not 
-			//minding whether 
-			//filename is 
-			//undefined or not
-			
-			for (let i = 0; i < terms.length; i++) {
-					
-					//check if we are
-					//dealing with an array
-					if(typeof(terms[i]) === typeof([])){
-						//define an inner 
-						//loop for it
-						//
-						for (let k = 0; k < terms[i].length; k++) {
-							
-							//first split
-							//to get doc word
-							//is mapped to
-							let docArray = this.index[terms[i][k]].split(",");
+    /**
+     * Get the size of an object.
+     * @param {object} object - The object value.
+     * @return {number} The object size value.
+     */
 
-							//loop through
-							//each of them
-							//and get the index
-							//number
-							let index = 0;
-							for (let j = 0; j < docArray.length; j++) {
-								index = docArray[j].substring(2,docArray[j].length);
+    getObjectSize(object) {
+        return Object.keys(object).length;
+    }
 
-								//check if index
-								//number has been
-								//added before
-								if(searchResult[j].indexOf(index) > -1){
-									continue;
-								}
-								else{
-									searchResult[j] = index;
-								}
-							}
-							//set term word
-							termWord[termWord.length] = terms[i][k];
+    /**
+     * Removes punctuation marks.
+     * @param {string} sentence - The sentence value.
+     * @return {string} The sentence value.
+     */
+    removePunctuation(sentence) {
+        sentence = sentence.match(/[^_\W]+/g).join(' ');
 
-							//set searchResultSuper
-							searchResultSuper[searchResultSuper.length] = searchResult;
+        return sentence;
+    }
 
-							//reset searchResult 
-							//to empty
-							searchResult = [];
-						}
-					}
-					else{
-						//we are dealing
-						//with a word
-			
-						//first split
-						//to get doc word
-						//is mapped to
-						let docArray = this.index[terms[i]].split(",");
-
-						//loop through
-						//each of them
-						//and get the index
-						//number
-						let index = 0;
-						for (let j = 0; j < docArray.length; j++) {
-							index = docArray[j].substring(2,docArray[j].length);
-
-							//check if index
-							//number has been
-							//added before
-							if(searchResult[j].indexOf(index) > -1){
-								continue;
-							}
-							else{
-								searchResult[j] = index;
-							}
-						}
-						//set term word
-						termWord[termWord.length] = terms[i];
-
-						//set searchResultSuper
-						searchResultSuper[searchResultSuper.length] = searchResult;
-
-						//reset searchResult 
-						//to empty
-						searchResult = [];
-					}
-				}
-			//es6 style of
-			//returning 
-			//multiple values
-			//by function
-			//e.g. [go,you,we] = [[1,2],[1],[1,2,3]]
-			//calling go[0] returns 1;
-			//showing go appeared
-			//in document 1 
-			//in the uploaded file
-			termWord = this.returnSearchResult(searchResultSuper);
-
-			return termWord;
-		}
-
-	//function just returns 
-	//its parameter
-	//this facilitates
-	//es 6 multiple value
-	//return by function
-	returnSearchResult(searchResult){
-		return searchResult;
-	}
-
-	//function to check
-	//if Index is created
-	//that is not {}
-	isIndexCreated(){
-		if(this.index !== {}){
-			return true;
-		}
-		else{
-			return false;
-		}
-
-	}
-
-	//verifies that mapping
-	//used to generate
-	//index is correct
-	isMapCorrect(rightMap){
-
-		//initially
-		//assume that
-		//mapping is wrong
-		let status = false;
-
-		for (let i = 0; i < rightMap.length; i++) {
-			if(rightMap[i] === this.objectMap[i]){
-				status = true;
-			}
-			else{
-				status = false;
-				//no need to 
-				//continue till
-				//end of loop
-				break;
-			}
-		}
-		return status;
-		
-	}
-
-	areAllValidIndex(searchResult){
-
-			//assume that indices
-			//are wrong at the onset
-			let status = false;
-
-			//loop through
-			//to check that
-			//they are integers
-			//and they are index
-			//this.books
-			for (let i = 0; i < searchResult.length; i++) {
-				//check if 
-				//I am looking
-				//at an array of indices
-				if(typeof(searchResult[i]) === typeof([])){
-					for (let j = 0; j < searchResult[j].length; j++) {
-						//check elements 
-						//are all integers
-						if(typeof(searchResult[i][j]) === typeof(0)){
-							status = true;
-						}
-						else{
-							status = false;
-							//no need to continue
-							//so break
-							break;
-						}
-					}
-				}
-				else{
-						//check elements 
-						//are all integers
-						if(typeof(searchResult[i][j]) === typeof(0)){
-							status = true;
-						}
-						else{
-							status = false;
-							//no need to continue
-							//so break
-							break;
-						}
-				}
-			}
-			return status;
-	}
+    /**
+     * Set the book instance variable
+     * @param {array} book - The book value.
+     */
+    setBooks(book) {
+        this.books = book;
+    }
 
 }

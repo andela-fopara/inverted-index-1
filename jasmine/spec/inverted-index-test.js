@@ -1,116 +1,108 @@
-// test suites for the inverted index project
+/* test suites for the inverted index project */
 
-//import the required file
-//import InvertedIndex from "../src/js/inverted-index";
-//import {InvertedIndex} from '../../src/js/inverted-index';
+/* testSuite 1 */
+describe("Read book data", () => {
 
-// testSuite 1
-describe("Read book data", function() {
+    let invertedIndex = new InvertedIndex();
 
-	//creates an object of the InvertedIndex class
-	let invertedIndex = new InvertedIndex();
+    let book = [{
+            "title": "Alice in Wonderland",
+            "text": "Alice falls into a rabbit hole and enters a world full of imagination."
+        },
 
-	//calls function to
-	//create index
-	//which in turn calls
-	//the function
-	//to read the json
-	//file
-	invertedIndex.createIndex("books.json");
+        {
+            "title": "The Lord of the Rings: The Fellowship of the Ring.",
+            "text": "An unusual alliance of man, elf, dwarf, wizard and hobbit seek to destroy a powerful ring."
+        }
+    ];
 
-  it("assert that json file read is not empty", function() {
-  		//call isEmpty function
-  	expect(invertedIndex.isEmpty()).toBeFalsy();
+    invertedIndex.createIndex(book);
 
-  });
+    it("assert that json file read is not empty", () => {
+
+        expect(invertedIndex.isEmpty()).toBeFalsy();
+
+    });
 });
 
-// testSuite 2
-describe("Populate Index", function() {
+/*testSuite 2 */
 
-	//creates an object of the InvertedIndex class
-	let invertedIndex = new InvertedIndex();
+describe("Populate Index", () => {
 
-	//calls function to
-	//create index
-	//which in turn calls
-	//the function
-	//to read the json
-	//file
-	invertedIndex.createIndex("books.json");
+    let invertedIndex = new InvertedIndex();
 
-	//nesting describe
-	  describe("Test that Index is created once JSON file has been read", function() {
+    let book = [{
+            "title": "Alice in Wonderland",
+            "text": "Alice falls into a rabbit hole and enters a world full of imagination."
+        },
 
-	  it("assert that index is populated each time json file is read", function() {
-	  	//calls function isIndexCreated() 
-	  	//to see if the status variable 
-	  	//is set to true or false
+        {
+            "title": "The Lord of the Rings: The Fellowship of the Ring.",
+            "text": "An unusual alliance of man, elf, dwarf, wizard and hobbit seek to destroy a powerful ring."
+        }
+    ];
 
-	  	expect(invertedIndex.isIndexCreated()).toBeTruthy();
+    invertedIndex.createIndex(book);
 
-	  });
-	});
-  
+    describe("Test that Index is created once JSON file has been read", () => {
 
+        it("assert that index is populated each time json file is read", () => {
 
-  describe("Test that the index maps the string keys to the correct objects in the JSON array.", function() {
+            expect(invertedIndex.isIndexCreated()).toBeTruthy();
 
-	//sets the correct 
-	//answer that 
-	//should be returned 
-	//from mapping
-	let correctAnswer = {
-	  doc_1: {
-	    "title": "Alice in Wonderland",
-	    "text": "Alice falls into a rabbit hole and enters a world full of imagination."
-	  },
-	  doc_2: {
-	    "title": "The Lord of the Rings: The Fellowship of the Ring.",
-	    "text": "An unusual alliance of man, elf, dwarf, wizard and hobbit seek to destroy a powerful ring."
-	  }
-	};
+        });
+    });
 
 
-  it("assert that the index maps the string keys to the correct objects in the JSON array", function() {
-  	//calls function 
-  	//isMapCorrect() 
-  	//to see if the status 
-  	//variable is set to 
-  	//true or false
 
-  	expect(invertedIndex.isMapCorrect(correctAnswer)).toBeTruthy();
+    describe("Test that the index maps the string keys to the correct objects in the JSON array.", () => {
 
-  });
+        let correctAnswer = {
+            doc_1: {
+                "title": "Alice in Wonderland",
+                "text": "Alice falls into a rabbit hole and enters a world full of imagination."
+            },
+            doc_2: {
+                "title": "The Lord of the Rings: The Fellowship of the Ring.",
+                "text": "An unusual alliance of man, elf, dwarf, wizard and hobbit seek to destroy a powerful ring."
+            }
+        };
+
+
+        it("assert that the index maps the string keys to the correct objects in the JSON array", () => {
+
+            expect(invertedIndex.isMapCorrect(correctAnswer)).toBeTruthy();
+
+        });
+
+    });
 
 });
 
-});
+/* testSuite 3 */
+describe("Search index", () => {
 
-// testSuite 3
-describe("Search index", function() {
+    let invertedIndex = new InvertedIndex();
 
-	//creates an object of the InvertedIndex class
-	let invertedIndex = new InvertedIndex();
+    let book = [{
+            "title": "Alice in Wonderland",
+            "text": "Alice falls into a rabbit hole and enters a world full of imagination."
+        },
 
-	//calls function to
-	//create index
-	//which in turn calls
-	//the function
-	//to read the json
-	//file
-	invertedIndex.createIndex("./spec/books.json");
+        {
+            "title": "The Lord of the Rings: The Fellowship of the Ring.",
+            "text": "An unusual alliance of man, elf, dwarf, wizard and hobbit seek to destroy a powerful ring."
+        }
+    ];
 
-	// run a search
-	let searchResult = invertedIndex.search(['Alice',['unusual','Fellowship'],'Lord']);
+    invertedIndex.createIndex(book);
 
-  it("assert that search returns an array of indices of the correct objects that contain the words in the search query - File Name not specified", function() {
-  	// call the areAllValidIndex
-  	// to verify that what 
-  	// is returned are all
-  	// integers of valid index
-    expect(invertedIndex.areAllValidIndex(searchResult)).toBeTruthy();
+    let searchResult = invertedIndex.search(['Alice', 'Lord', ['unusual', 'Fellowship']]);
 
-  });
+
+    it("assert that search returns an array of indices of the correct objects that contain the words in the search query - File Name not specified", () => {
+        expect(invertedIndex.areAllValidIndex(searchResult)).toBeTruthy();
+
+    });
 
 });
