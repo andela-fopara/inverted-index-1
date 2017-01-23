@@ -34,6 +34,7 @@
     "gulp-jasmine-livereload-task": "^0.10.1",
     "gulp-notify": "^2.2.0",
     "gulp-open": "^2.0.0",
+    "gulp-coveralls": "^0.1.4",
     "jasmine": "^2.5.3",
     "jshint": "^2.9.4"
   },
