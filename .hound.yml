@@ -1,5 +1,7 @@
 jshint:
   config_file: .jshintrc
+
+jshint:
   ignore_file: .jshintignore
 
 fail_on_violations: true
