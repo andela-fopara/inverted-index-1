@@ -25,7 +25,6 @@
                                 //   "vars"   : all variables only
                                 //   "strict" : all variables, all function parameters
     "maxlen"        : 80,       // {int} Max number of characters per line
-    "varstmt"       : true,    // true: Disallow any var statements. Only `let` and `const` are allowed.
     "indent"        : 2,
     "esversion"     : 6,         // {int} Specify the ECMAScript version to which the code must adhere.
     "browser"       : true,     // Web Browser (window, document, etc)
