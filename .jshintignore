@@ -1,6 +1,3 @@
 search string
 /lib
 /dist
-/bower_components/angular
-/bower_components/ng-file-upload
-/bower_components/ng-file-upload-shim
