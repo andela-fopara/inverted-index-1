@@ -3,7 +3,7 @@
  * @name InvertedIndex:InvertedIndex
  * @description
  * This is InvertedIndex module.
- **/   
+ **/
 let nameSpace = angular.module('InvertedIndex', ['ngSanitize']);
 
 
@@ -18,26 +18,26 @@ let nameSpace = angular.module('InvertedIndex', ['ngSanitize']);
 
 nameSpace.controller('InvertedIndexController', ['$scope', '$sce', ($scope, $sce) => {
 
-    $scope.allFiles = {};
-    $scope.file_names = [];
-    $scope.invertedIndex = new InvertedIndex();
-    $scope.index = null;
-    $scope.allMostFrequency = {};
+  $scope.allFiles = {};
+  $scope.file_names = [];
+  $scope.invertedIndex = new InvertedIndex();
+  $scope.index = null;
+  $scope.allMostFrequency = {};
 
-    $scope.terms = ["Term"];
+  $scope.terms = ["Term"];
 
-    $scope.words = null;
+  $scope.words = null;
 
-    $scope.index_display = [];
-    $scope.index_search_display = [];
+  $scope.index_display = [];
+  $scope.index_search_display = [];
 
-    $scope.search_terms = ["Term"];
-    $scope.search_words_array = "";
-    $scope.selected_file = "";
+  $scope.search_terms = ["Term"];
+  $scope.search_words_array = "";
+  $scope.selected_file = "";
 
-    let reader;
+  let reader;
 
-    /**
+  /**
    * @ngdoc function
    * @name upload
    * @methodOf InvertedIndex.InvertedIndexController:InvertedIndexController
@@ -46,19 +46,19 @@ nameSpace.controller('InvertedIndexController', ['$scope', '$sce', ($scope, $sce
    * the selected file 
    */
 
-    $scope.upload = file => {
-        if (file === undefined) {
-            $scope.files = document.getElementById('files').files[0];
-        }
+  $scope.upload = file => {
+    if (file === undefined) {
+      $scope.files = document.getElementById('files').files[0];
+    }
 
-        $scope.progress = document.querySelector('.percent');
+    $scope.progress = document.querySelector('.percent');
 
-        $scope.handleFileSelect();
+    $scope.handleFileSelect();
 
-    };
+  };
 
 
-    /**
+  /**
    * @ngdoc function
    * @name abortRead
    * @methodOf InvertedIndex.InvertedIndexController:InvertedIndexController
@@ -66,52 +66,52 @@ nameSpace.controller('InvertedIndexController', ['$scope', '$sce', ($scope, $sce
    * This function aborts the file reading
    */
 
-    $scope.abortRead = () => {
-        reader.abort;
-    };
+  $scope.abortRead = () => {
+    reader.abort;
+  };
 
-/**
+  /**
    * @ngdoc function
    * @name errorHandler
    * @methodOf InvertedIndex.InvertedIndexController:InvertedIndexController
    * @description
    * This function handles error that occur during file reading
    */
-    $scope.errorHandler = evt => {
-        switch (evt.target.error.code) {
-            case evt.target.error.NOT_FOUND_ERR:
-                alert('File Not Found!');
-                break;
-            case evt.target.error.NOT_READABLE_ERR:
-                alert('File is not readable');
-                break;
-            case evt.target.error.ABORT_ERR:
-                break; 
-            default:
-                alert('An error occurred reading this file.');
-        }
-    };
+  $scope.errorHandler = evt => {
+    switch (evt.target.error.code) {
+      case evt.target.error.NOT_FOUND_ERR:
+        alert('File Not Found!');
+        break;
+      case evt.target.error.NOT_READABLE_ERR:
+        alert('File is not readable');
+        break;
+      case evt.target.error.ABORT_ERR:
+        break;
+      default:
+        alert('An error occurred reading this file.');
+    }
+  };
 
-    /**
+  /**
    * @ngdoc function
    * @name updateProgress
    * @methodOf InvertedIndex.InvertedIndexController:InvertedIndexController
    * @description
    * This function updates the UI progress bar
    */
-    $scope.updateProgress = evt => {
-        // evt is an ProgressEvent.
-        if (evt.lengthComputable) {
-            const percentLoaded = Math.round((evt.loaded / evt.total) * 100);
-            // Increase the progress bar length.
-            if (percentLoaded < 100) {
-                $scope.progress.style.width = `${percentLoaded}%`;
-                $scope.progress.textContent = `${percentLoaded}%`;
-            }
-        }
-    };
+  $scope.updateProgress = evt => {
+    // evt is an ProgressEvent.
+    if (evt.lengthComputable) {
+      const percentLoaded = Math.round((evt.loaded / evt.total) * 100);
+      // Increase the progress bar length.
+      if (percentLoaded < 100) {
+        $scope.progress.style.width = `${percentLoaded}%`;
+        $scope.progress.textContent = `${percentLoaded}%`;
+      }
+    }
+  };
 
-    /**
+  /**
    * @ngdoc function
    * @name handleFileSelect
    * @methodOf InvertedIndex.InvertedIndexController:InvertedIndexController
@@ -121,49 +121,49 @@ nameSpace.controller('InvertedIndexController', ['$scope', '$sce', ($scope, $sce
    * calls function to prepare generated index for viewing
    */
 
-    $scope.handleFileSelect = evt => {
+  $scope.handleFileSelect = evt => {
 
-        $scope.progress.style.width = '0%';
-        $scope.progress.textContent = '0%';
+    $scope.progress.style.width = '0%';
+    $scope.progress.textContent = '0%';
 
-        reader = new FileReader();
-        reader.onabort = e => {
-            alert('File read cancelled');
-        };
-        reader.onloadstart = e => {
-            document.getElementById('progress_bar').className = 'loading';
-        };
+    reader = new FileReader();
+    reader.onabort = e => {
+      alert('File read cancelled');
+    };
+    reader.onloadstart = e => {
+      document.getElementById('progress_bar').className = 'loading';
+    };
 
-        reader.onload = e => {
-            $scope.progress.textContent = '100%';
-            let content = e.target.result;
-            $scope.$apply(() => {
-                $scope.content = content;
-                $scope.file_object = JSON.parse(content);
-                $scope.allFiles[$scope.files.name] = $scope.file_object;
-                $scope.file_names.push($scope.files.name);
-                $scope.trusted_html_content = $sce.trustAsHtml(`<p><code>${$scope.content}</code></p>`);
+    reader.onload = e => {
+      $scope.progress.textContent = '100%';
+      let content = e.target.result;
+      $scope.$apply(() => {
+        $scope.content = content;
+        $scope.file_object = JSON.parse(content);
+        $scope.allFiles[$scope.files.name] = $scope.file_object;
+        $scope.file_names.push($scope.files.name);
+        $scope.trusted_html_content = $sce.trustAsHtml(`<p><code>${$scope.content}</code></p>`);
 
-                $scope.invertedIndex.createIndex($scope.file_object);
-                $scope.index = $scope.invertedIndex.index;
-                $scope.allMostFrequency[$scope.files.name] = $scope.invertedIndex.mostFrequency;
-                $scope.prepareIndexViewComponents();
+        $scope.invertedIndex.createIndex($scope.file_object);
+        $scope.index = $scope.invertedIndex.index;
+        $scope.allMostFrequency[$scope.files.name] = $scope.invertedIndex.mostFrequency;
+        $scope.prepareIndexViewComponents();
 
-            });
-
-
-            setTimeout("document.getElementById('progress_bar').className='';", 2000);
+      });
 
 
+      setTimeout("document.getElementById('progress_bar').className='';", 2000);
 
-        };
 
-        reader.readAsText($scope.files);
 
     };
 
+    reader.readAsText($scope.files);
 
-    /**
+  };
+
+
+  /**
    * @ngdoc function
    * @name file_selected
    * @methodOf InvertedIndex.InvertedIndexController:InvertedIndexController
@@ -172,16 +172,16 @@ nameSpace.controller('InvertedIndexController', ['$scope', '$sce', ($scope, $sce
    * uploaded file that is selected by user,
    * calls function to prepare generated index for viewing
    */
-  
-    $scope.file_selected = (file) => {
 
-        $scope.invertedIndex.createIndex($scope.allFiles[file]);
-        $scope.index = $scope.invertedIndex.index;
-        $scope.prepareIndexViewComponents(file);
+  $scope.file_selected = (file) => {
 
-    };
+    $scope.invertedIndex.createIndex($scope.allFiles[file]);
+    $scope.index = $scope.invertedIndex.index;
+    $scope.prepareIndexViewComponents(file);
 
-/**
+  };
+
+  /**
    * @ngdoc function
    * @name prepareIndexViewComponents
    * @methodOf InvertedIndex.InvertedIndexController:InvertedIndexController
@@ -189,54 +189,53 @@ nameSpace.controller('InvertedIndexController', ['$scope', '$sce', ($scope, $sce
    * This function transforms the index generated
    * the human readable form
    */
-    $scope.prepareIndexViewComponents = (file) => {
+  $scope.prepareIndexViewComponents = (file) => {
 
-        $scope.terms = ["Terms"];
-        $scope.index_display = [];
+    $scope.terms = ["Terms"];
+    $scope.index_display = [];
 
-        let mostFrequencyKey = "";
+    let mostFrequencyKey = "";
 
-        if(file !== undefined){
-          mostFrequencyKey = file;
-        }
-        else{
-          mostFrequencyKey = $scope.files.name;
-        }
+    if (file !== undefined) {
+      mostFrequencyKey = file;
+    } else {
+      mostFrequencyKey = $scope.files.name;
+    }
 
-        for (var i = 0; i < $scope.allMostFrequency[mostFrequencyKey]; i++) {
-            $scope.terms.push(`doc${i + 1}`);
-        }
+    for (var i = 0; i < $scope.allMostFrequency[mostFrequencyKey]; i++) {
+      $scope.terms.push(`doc${i + 1}`);
+    }
 
-        if ($scope.index !== undefined) {
-            $scope.words = Object.keys($scope.index).sort();
-        }
+    if ($scope.index !== undefined) {
+      $scope.words = Object.keys($scope.index).sort();
+    }
 
-        let index_object_size = $scope.invertedIndex.getObjectSize($scope.index);
+    let index_object_size = $scope.invertedIndex.getObjectSize($scope.index);
 
-        for (let i = 0; i < index_object_size; i++) {
-            let index_display_temp = [$scope.words[i]];
+    for (let i = 0; i < index_object_size; i++) {
+      let index_display_temp = [$scope.words[i]];
 
-            let k = 0;
+      let k = 0;
 
-            for (let j = 0; j < $scope.allMostFrequency[mostFrequencyKey]; j++) {
-                let doc_id = j + 1;
-                if (doc_id == $scope.index[$scope.words[i]][k]) {
-                    index_display_temp.push("X");
+      for (let j = 0; j < $scope.allMostFrequency[mostFrequencyKey]; j++) {
+        let doc_id = j + 1;
+        if (doc_id == $scope.index[$scope.words[i]][k]) {
+          index_display_temp.push("X");
 
-                    k = k + 1;
-                } else {
+          k = k + 1;
+        } else {
 
-                    index_display_temp.push(" ");
-
-                }
-            }
-            $scope.index_display[i] = index_display_temp;
+          index_display_temp.push(" ");
 
         }
+      }
+      $scope.index_display[i] = index_display_temp;
 
-    };
+    }
 
-/**
+  };
+
+  /**
    * @ngdoc function
    * @name search
    * @methodOf InvertedIndex.InvertedIndexController:InvertedIndexController
@@ -245,61 +244,61 @@ nameSpace.controller('InvertedIndexController', ['$scope', '$sce', ($scope, $sce
    * for a set of word/terms,
    * calls function to transform the search result to human readable form
    */
-  
-    $scope.search = () => {
 
-        let search_result = $scope.invertedIndex.search($scope.allFiles[$scope.selected_file], $scope.search_strings);
+  $scope.search = () => {
 
-        let search_words_array = $scope.invertedIndex.removePunctuation($scope.search_strings).split(" ");
+    let search_result = $scope.invertedIndex.search($scope.allFiles[$scope.selected_file], $scope.search_strings);
 
-        $scope.prepareSearchIndexViewComponents(search_words_array, search_result);
+    let search_words_array = $scope.invertedIndex.removePunctuation($scope.search_strings).split(" ");
 
-    };
+    $scope.prepareSearchIndexViewComponents(search_words_array, search_result);
 
-    /**
+  };
+
+  /**
    * @ngdoc function
    * @name prepareSearchIndexViewComponents
    * @methodOf InvertedIndex.InvertedIndexController:InvertedIndexController
    * @description
    * This function searches prepares the search result into a human readble form
    */
-    $scope.prepareSearchIndexViewComponents = (search_words_array, search_result) => {
+  $scope.prepareSearchIndexViewComponents = (search_words_array, search_result) => {
 
-        $scope.search_terms = ["Terms"];
-        $scope.index_search_display = [];
+    $scope.search_terms = ["Terms"];
+    $scope.index_search_display = [];
 
-        for (var i = 0; i < $scope.allMostFrequency[$scope.selected_file]; i++) {
-            $scope.search_terms.push(`doc${i + 1}`);
-        }
+    for (var i = 0; i < $scope.allMostFrequency[$scope.selected_file]; i++) {
+      $scope.search_terms.push(`doc${i + 1}`);
+    }
 
-        let index_search_display_temp = [];
+    let index_search_display_temp = [];
 
-        let size = search_result.length;
+    let size = search_result.length;
 
-        for (let i = 0; i < size; i++) {
-            index_search_display_temp.push(search_words_array[i]);
+    for (let i = 0; i < size; i++) {
+      index_search_display_temp.push(search_words_array[i]);
 
-            let k = 0;
+      let k = 0;
 
-            for (let j = 0; j < $scope.allMostFrequency[$scope.selected_file]; j++) {
-                let doc_id = j + 1;
-                if (doc_id == search_result[i][k]) {
-                    index_search_display_temp.push("X");
+      for (let j = 0; j < $scope.allMostFrequency[$scope.selected_file]; j++) {
+        let doc_id = j + 1;
+        if (doc_id == search_result[i][k]) {
+          index_search_display_temp.push("X");
 
-                    k = k + 1;
-                } else {
+          k = k + 1;
+        } else {
 
-                    index_search_display_temp.push(" ");
-
-                }
-            }
-            $scope.index_search_display.push(index_search_display_temp);
-            index_search_display_temp = [];
+          index_search_display_temp.push(" ");
 
         }
+      }
+      $scope.index_search_display.push(index_search_display_temp);
+      index_search_display_temp = [];
+
+    }
 
 
-    };
+  };
 
 
 
