@@ -66,8 +66,9 @@ class InvertedIndex {
     isEmpty() {
         let status = true;
 
-        if (this.books.length > 0)
+        if (this.books.length > 0){
             status = false;
+        }
 
         return status;
     }
@@ -167,7 +168,7 @@ class InvertedIndex {
 
             return this.index;
         } else {
-            return this.index
+            return this.index;
         }
     }
 
