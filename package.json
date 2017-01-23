@@ -32,6 +32,7 @@
     "gulp-connect": "^5.0.0",
     "gulp-jasmine-browser": "^1.7.1",
     "gulp-jasmine-livereload-task": "^0.10.1",
+    "gulp-jasmine": "^2.4.2",
     "gulp-notify": "^2.2.0",
     "gulp-open": "^2.0.0",
     "gulp-coveralls": "^0.1.4",
