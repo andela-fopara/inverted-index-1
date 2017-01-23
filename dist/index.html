@@ -39,8 +39,8 @@
                             <div class="col-md-12 col-sm-12">
                                 <!-- file upload form starts here -->
                                 <input type="file" id="files" name="files" class="drop-box" ng-model="files" ng-click="resetProgress()" accept=".json" multiple="multiple" />
-                                <button ng-click="abortRead();">Cancel read</button>
-                                <button ng-click="upload();"> upload</button>
+                                <button ng-click="abortRead()">Cancel read</button>
+                                <button ng-click="upload()"> upload</button>
                                 <div id="progress_bar">
                                     <div class="percent">0%</div>
                                 </div>
@@ -83,7 +83,7 @@
                 <div class="col-md-3 col-sm-3">
                     <h3 class="sub_title"> Search </h3>
                     <!-- search form -->
-                    <span class="file_to">Enter words separated by ; to search</span>
+                    <span class="file_to">Enter words to search e.g. ['a', 'alice'],'book','me',['help']</span>
                     <input type="text" name="search_words" id="search_words" class="form-control search" ng-model="search_strings" required>
                     <span class="file_to"> Select File to Search </span>
                     <select name="file" id="file" class="form-control" ng-model="selected_file" ng-options="fn for fn in file_names" required>

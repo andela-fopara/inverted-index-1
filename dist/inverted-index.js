@@ -102,7 +102,7 @@ class InvertedIndex {
                     continue;
                 } else {
 
-                    if (index[title[j]] == undefined) {
+                    if (index[title[j]] === undefined) {
                         index[title[j]] = [];
                     }
 
@@ -127,7 +127,7 @@ class InvertedIndex {
                     continue;
                 } else {
 
-                    if (index[text[j]] == undefined) {
+                    if (index[text[j]] === undefined) {
                         index[text[j]] = [];
                     }
 
@@ -155,7 +155,7 @@ class InvertedIndex {
      */
     getIndex(document_key) {
 
-        if (!document_key === undefined) {
+        if (document_key !== undefined) {
 
             let tempObjectMap = {};
 
@@ -241,7 +241,7 @@ class InvertedIndex {
         let status = false;
 
         for (let i = 0; i < this.getObjectSize(rightMap); i++) {
-            if (rightMap[i] == this.objectMap[i]) {
+            if (rightMap[i] === this.objectMap[i]) {
                 status = true;
             } else {
                 status = false;
