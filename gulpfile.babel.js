@@ -12,8 +12,6 @@ import connect from 'gulp-connect';
 //add the  open dependency require statement
 import opens from 'gulp-open';
 
-//import opens from 'gulp-open';
-
 //add the jasmine dependency to actually 
 //run the jasmine test suites in .spec files
 import jasmines from 'gulp-jasmine-livereload-task';
@@ -34,14 +32,6 @@ import watch from 'gulp-watch';
 //be transpiled to es5
 import babel_register from 'babel-core/register';
 
-
-//we start writing our gulp task
-//test with hello
-gulp.task('hello', () => {
-		//statements for the task goes here
-		console.log('Hello Zell');
-	});
-
 //the connect task to create a webserver running on http://localhost:8001
 gulp.task('connect', () => {
     connect.server({
@@ -55,14 +45,10 @@ gulp.task('connect', () => {
 //web browser at 
 //the webserver
 //for front-end test
-
 gulp.task('open', () => {
   gulp.src('./src/index.html')
   .pipe(opens({uri: 'http://localhost:8004/'}));
 });
-
-
-
 
 
 //adds task to watch the filesystem and rebuild the project when a change is detected
@@ -105,7 +91,6 @@ gulp.task('js', () => {
 
 gulp.task('ty', ()=> {
   var filesForTest = ['./src/js/inverted-index.js', './jasmine/spec/inverted-index-test.js'];
-
   return gulp.src(filesForTest)
    .pipe(watch(filesForTest))
     .pipe(jasmineBrowser.specRunner())
@@ -120,7 +105,6 @@ gulp.task('coveralls', () => {
   if (!process.env.CI){
   	return;
   }
-
   return gulp.src('./coverage/lcov.info')
     .pipe(coveralls());
 });

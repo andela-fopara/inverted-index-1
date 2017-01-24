@@ -4,7 +4,7 @@
  * @description
  * This is InvertedIndex module.
  **/
-let nameSpace = angular.module('InvertedIndex', ['ngSanitize']);
+const nameSpace = angular.module('InvertedIndex', ['ngSanitize']);
 
 
 /**
@@ -14,10 +14,10 @@ let nameSpace = angular.module('InvertedIndex', ['ngSanitize']);
  * A controller that controls the update of the 
  * app front end when the scope variables
  * changes based on events
+ * @param {String, array} The name of controller and an  array of global variables/callback function
+ * @returns {null} Returns nothing
  */
-
 nameSpace.controller('InvertedIndexController', ['$scope', '$sce', ($scope, $sce) => {
-
   $scope.allFiles = {};
   $scope.file_names = [];
   $scope.invertedIndex = new InvertedIndex();
@@ -25,16 +25,16 @@ nameSpace.controller('InvertedIndexController', ['$scope', '$sce', ($scope, $sce
   $scope.allMostFrequency = {};
   $scope.allContents = {};
 
-  $scope.terms = ["Term"];
+  $scope.terms = ['Term'];
 
   $scope.words = null;
 
   $scope.index_display = [];
   $scope.index_search_display = [];
 
-  $scope.search_terms = ["Term"];
-  $scope.search_words_array = "";
-  $scope.selected_file = "";
+  $scope.search_terms = ['Term'];
+  $scope.search_words_array = '';
+  $scope.selected_file = '';
 
   let reader;
 
@@ -46,18 +46,11 @@ nameSpace.controller('InvertedIndexController', ['$scope', '$sce', ($scope, $sce
    * This function calls functions that read
    * the selected file 
    */
-
-  $scope.upload = file => {
+  $scope.upload = (file) => {
     if (file === undefined) {
       $scope.progress = document.querySelector('.percent');
-
       $scope.handleFileSelect();
-
-
     }
-
-
-
   };
 
 
@@ -68,7 +61,6 @@ nameSpace.controller('InvertedIndexController', ['$scope', '$sce', ($scope, $sce
    * @description
    * This function aborts the file reading
    */
-
   $scope.abortRead = () => {
     reader.abort;
   };
@@ -80,7 +72,7 @@ nameSpace.controller('InvertedIndexController', ['$scope', '$sce', ($scope, $sce
    * @description
    * This function handles error that occur during file reading
    */
-  $scope.errorHandler = evt => {
+  $scope.errorHandler = (evt) => {
     switch (evt.target.error.code) {
       case evt.target.error.NOT_FOUND_ERR:
         alert('File Not Found!');
@@ -102,7 +94,7 @@ nameSpace.controller('InvertedIndexController', ['$scope', '$sce', ($scope, $sce
    * @description
    * This function updates the UI progress bar
    */
-  $scope.updateProgress = evt => {
+  $scope.updateProgress = (evt) => {
     // evt is an ProgressEvent.
     if (evt.lengthComputable) {
       const percentLoaded = Math.round((evt.loaded / evt.total) * 100);
@@ -183,13 +175,10 @@ nameSpace.controller('InvertedIndexController', ['$scope', '$sce', ($scope, $sce
    * uploaded file that is selected by user,
    * calls function to prepare generated index for viewing
    */
-
   $scope.file_selected = (file) => {
-
     $scope.invertedIndex.createIndex($scope.allFiles[file]);
     $scope.index = $scope.invertedIndex.index;
     $scope.prepareIndexViewComponents(file);
-
   };
 
   /**
@@ -201,55 +190,37 @@ nameSpace.controller('InvertedIndexController', ['$scope', '$sce', ($scope, $sce
    * the human readable form
    */
   $scope.prepareIndexViewComponents = (file) => {
-
     $scope.terms = ["Terms"];
     $scope.index_display = [];
-
     let mostFrequencyKey = "";
-
     if (file !== undefined) {
       mostFrequencyKey = file;
-
       $scope.trusted_html_content = $sce.trustAsHtml(`<p><code>${$scope.allContents[file]}</code></p>`);
-
     } else {
       mostFrequencyKey = $scope.files.name;
       $scope.trusted_html_content = $sce.trustAsHtml(`<p><code>${$scope.allContents[$scope.files.name]}</code></p>`);
-
     }
-
     for (var i = 0; i < $scope.allMostFrequency[mostFrequencyKey]; i++) {
       $scope.terms.push(`doc${i + 1}`);
     }
-
     if ($scope.index !== undefined) {
       $scope.words = Object.keys($scope.index).sort();
     }
-
     let index_object_size = $scope.invertedIndex.getObjectSize($scope.index);
-
     for (let i = 0; i < index_object_size; i++) {
       let index_display_temp = [$scope.words[i]];
-
       let k = 0;
-
       for (let j = 0; j < $scope.allMostFrequency[mostFrequencyKey]; j++) {
         let doc_id = j + 1;
         if (doc_id == $scope.index[$scope.words[i]][k]) {
           index_display_temp.push("X");
-
           k = k + 1;
         } else {
-
           index_display_temp.push(" ");
-
         }
       }
       $scope.index_display[i] = index_display_temp;
-
     }
-
-
   };
 
   /**
@@ -261,15 +232,10 @@ nameSpace.controller('InvertedIndexController', ['$scope', '$sce', ($scope, $sce
    * for a set of word/terms,
    * calls function to transform the search result to human readable form
    */
-
   $scope.search = () => {
-
     let search_result = $scope.invertedIndex.search($scope.allFiles[$scope.selected_file], $scope.search_strings);
-
     let search_words_array = $scope.invertedIndex.removePunctuation($scope.search_strings).split(" ");
-
     $scope.prepareSearchIndexViewComponents(search_words_array, search_result);
-
   };
 
   /**
@@ -280,46 +246,28 @@ nameSpace.controller('InvertedIndexController', ['$scope', '$sce', ($scope, $sce
    * This function searches prepares the search result into a human readble form
    */
   $scope.prepareSearchIndexViewComponents = (search_words_array, search_result) => {
-
     $scope.search_terms = ["Terms"];
     $scope.index_search_display = [];
-
     $scope.trusted_html_content = $sce.trustAsHtml(`<p><code>${$scope.allContents[$scope.selected_file]}</code></p>`);
-
-
     for (var i = 0; i < $scope.allMostFrequency[$scope.selected_file]; i++) {
       $scope.search_terms.push(`doc${i + 1}`);
     }
-
     let index_search_display_temp = [];
-
     let size = search_result.length;
-
     for (let i = 0; i < size; i++) {
       index_search_display_temp.push(search_words_array[i]);
-
       let k = 0;
-
       for (let j = 0; j < $scope.allMostFrequency[$scope.selected_file]; j++) {
         let doc_id = j + 1;
         if (doc_id == search_result[i][k]) {
           index_search_display_temp.push("X");
-
           k = k + 1;
         } else {
-
           index_search_display_temp.push(" ");
-
         }
       }
       $scope.index_search_display.push(index_search_display_temp);
       index_search_display_temp = [];
-
     }
-
-
   };
-
-
-
 }]);

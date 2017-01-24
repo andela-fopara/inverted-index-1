@@ -11,6 +11,10 @@
     "type": "git",
     "url": "git+https://github.com/andela-f-opara/inverted-index-1.git"
   },
+  "engines": {
+    "node": "6.9.4",
+    "npm": "3.10.10"
+  },
   "keywords": [
     "jasmine",
     "index",
@@ -40,7 +44,6 @@
     "gulp-notify": "^2.2.0",
     "gulp-open": "^2.0.0",
     "jasmine": "^2.5.3",
-    "jshint": "^2.9.4"
   },
   "babel": {
     "presets": [
