@@ -1,7 +1,7 @@
-## Add Coveralls badge to project to publicize code coverage
+
 [![Coverage Status](https://coveralls.io/repos/github/andela-f-opara/inverted-index/badge.svg?branch=master)](https://coveralls.io/github/andela-f-opara/inverted-index?branch=master)
 
-### Inverted-Index
+## Inverted-Index
 
 This is an application that generates Index for uploaded files. The files can be uploaded in groups or singly. The files are expected to contain an array of JSON objects, else an error is thrown. The JSON objects are expected to be documents with keys 'title' and 'text'. After the generation of the index, user can search for a group of words from any of the uploaded files.
 
