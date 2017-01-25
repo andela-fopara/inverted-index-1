@@ -4,8 +4,9 @@
   "description": "Andela Inverted Index Application for Checkpoint 1 Class 22",
   "main": "index.html",
   "scripts": {
-    "test": "node node_modules/gulp/bin/gulp default",
-    "start": "gulp"
+    "test": "gulp test",
+    "start": "gulp",
+    "postinstall": "npm install gulp"
   },
   "repository": {
     "type": "git",
@@ -43,7 +44,7 @@
     "gulp-jasmine-livereload-task": "^0.10.1",
     "gulp-notify": "^2.2.0",
     "gulp-open": "^2.0.0",
-    "jasmine": "^2.5.3",
+    "jasmine": "^2.5.3"
   },
   "babel": {
     "presets": [

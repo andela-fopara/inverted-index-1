@@ -32,17 +32,26 @@ describe("Populate Index", () => {
     let invertedIndex = new InvertedIndex();
 
     let book = [{
-            "title": "Alice in Wonderland",
-            "text": "Alice falls into a rabbit hole and enters a world full of imagination."
+            "title": "Ada in Wonderland",
+            "text": "Going to the Moon!"
         },
 
         {
-            "title": "The Lord of the Rings: The Fellowship of the Ring.",
-            "text": "An unusual alliance of man, elf, dwarf, wizard and hobbit seek to destroy a powerful ring."
+            "title": "Obi is a boy",
+            "text": "Rules the world."
         }
     ];
 
     invertedIndex.createIndex(book);
+
+       describe("Ensures the file content is actually a valid JSON Array", () => {
+
+        it("assert that the file content is actually a valid JSON Array", () => {
+
+            expect(invertedIndex.isValidJsonArray()).toBeTruthy();
+
+        });
+    });
 
     describe("Test that Index is created once JSON file has been read", () => {
 
@@ -53,20 +62,22 @@ describe("Populate Index", () => {
         });
     });
 
-
-
     describe("Test that the index maps the string keys to the correct objects in the JSON array.", () => {
 
         let correctAnswer = {
-            doc_1: {
-                "title": "Alice in Wonderland",
-                "text": "Alice falls into a rabbit hole and enters a world full of imagination."
-            },
-            doc_2: {
-                "title": "The Lord of the Rings: The Fellowship of the Ring.",
-                "text": "An unusual alliance of man, elf, dwarf, wizard and hobbit seek to destroy a powerful ring."
-            }
-        };
+            ada: [1],
+            in: [1],
+            going: [1],
+            to: [1],
+            the: [1,2],
+            moon: [1],
+            obi: [2],
+            is: [2],
+            a: [2],
+            boy: [2],
+            rules: [2],
+            world: [2]
+            };
 
 
         it("assert that the index maps the string keys to the correct objects in the JSON array", () => {
@@ -85,23 +96,25 @@ describe("Search index", () => {
     let invertedIndex = new InvertedIndex();
 
     let book = [{
-            "title": "Alice in Wonderland",
-            "text": "Alice falls into a rabbit hole and enters a world full of imagination."
+            "title": "Ada in Wonderland",
+            "text": "Going to the Moon!"
         },
 
         {
-            "title": "The Lord of the Rings: The Fellowship of the Ring.",
-            "text": "An unusual alliance of man, elf, dwarf, wizard and hobbit seek to destroy a powerful ring."
+            "title": "Obi is a boy",
+            "text": "Rules the world."
         }
     ];
 
+    let correctArrayOfIndices = [[1],[1],[2],[1]];
+
     invertedIndex.createIndex(book);
 
-    let searchResult = invertedIndex.search(['Alice', 'Lord', ['unusual', 'Fellowship']]);
+    let searchResult = invertedIndex.search(['Ada', 'In', ['world', 'Moon']]);
 
 
     it("assert that search returns an array of indices of the correct objects that contain the words in the search query - File Name not specified", () => {
-        expect(invertedIndex.areAllValidIndex(searchResult)).toBeTruthy();
+        expect(invertedIndex.areAllValidIndex(searchResult,correctArrayOfIndices)).toBeTruthy();
 
     });
 
