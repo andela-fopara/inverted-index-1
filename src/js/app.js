@@ -32,9 +32,10 @@ nameSpace.controller('InvertedIndexController', ['$scope', '$sce', ($scope, $sce
   $scope.index_display = [];
   $scope.index_search_display = [];
 
-  $scope.search_terms = ['Term'];
+  $scope.search_terms = [];
   $scope.search_words_array = '';
-  $scope.selected_file = '';
+  $scope.selected_file = [];
+  $scope.allSearchResult = [];
 
   let reader;
 
@@ -115,7 +116,6 @@ nameSpace.controller('InvertedIndexController', ['$scope', '$sce', ($scope, $sce
    * resets progress bar on new file selection,
    * calls function to prepare generated index for viewing
    */
-
   $scope.handleFileSelect = (evt) => {
 
     let fileArray = document.getElementById('files').files;
@@ -233,10 +233,14 @@ nameSpace.controller('InvertedIndexController', ['$scope', '$sce', ($scope, $sce
    * calls function to transform the search result to human readable form
    */
   $scope.search = () => {
-    let search_result = $scope.invertedIndex.search($scope.allFiles[$scope.selected_file], $scope.search_strings);
-    let search_words_array = $scope.invertedIndex.removePunctuation($scope.search_strings).split(" ");
-    $scope.prepareSearchIndexViewComponents(search_words_array, search_result);
-  };
+    for (let i = 0; i < $scope.selected_file.length; i++) {
+      let search_result = $scope.invertedIndex.search($scope.allFiles[$scope.selected_file[i]], $scope.search_strings);
+      let search_words_array = $scope.invertedIndex.removePunctuation($scope.search_strings).split(" ");
+      let search_in_view = $scope.prepareSearchIndexViewComponents(search_words_array, search_result, i);
+      $scope.index_search_display[i] = search_in_view;
+    }
+    $scope.index = $scope.invertedIndex.index;
+    };
 
   /**
    * @ngdoc function
@@ -245,29 +249,30 @@ nameSpace.controller('InvertedIndexController', ['$scope', '$sce', ($scope, $sce
    * @description
    * This function searches prepares the search result into a human readble form
    */
-  $scope.prepareSearchIndexViewComponents = (search_words_array, search_result) => {
+  $scope.prepareSearchIndexViewComponents = (search_words_array, search_result,counter) => {
     $scope.search_terms = ["Terms"];
-    $scope.index_search_display = [];
-    $scope.trusted_html_content = $sce.trustAsHtml(`<p><code>${$scope.allContents[$scope.selected_file]}</code></p>`);
-    for (var i = 0; i < $scope.allMostFrequency[$scope.selected_file]; i++) {
+    $scope.trusted_html_content = $sce.trustAsHtml(`<p><code>${$scope.allContents[$scope.selected_file[counter]]}</code></p>`);
+    for (var i = 0; i < $scope.allMostFrequency[$scope.selected_file[counter]]; i++) {
       $scope.search_terms.push(`doc${i + 1}`);
     }
-    let index_search_display_temp = [];
+    let index_search_display_temp = [$scope.search_terms];
+    let index_search_display_item = [];
     let size = search_result.length;
     for (let i = 0; i < size; i++) {
-      index_search_display_temp.push(search_words_array[i]);
+      index_search_display_item.push(search_words_array[i]);
       let k = 0;
-      for (let j = 0; j < $scope.allMostFrequency[$scope.selected_file]; j++) {
+      for (let j = 0; j < $scope.allMostFrequency[$scope.selected_file[counter]]; j++) {
         let doc_id = j + 1;
         if (doc_id == search_result[i][k]) {
-          index_search_display_temp.push("X");
+          index_search_display_item.push("X");
           k = k + 1;
         } else {
-          index_search_display_temp.push(" ");
+          index_search_display_item.push(" ");
         }
       }
-      $scope.index_search_display.push(index_search_display_temp);
-      index_search_display_temp = [];
-    }
+      index_search_display_temp.push(index_search_display_item);
+      index_search_display_item = [];
+      }
+      return index_search_display_temp;
   };
 }]);

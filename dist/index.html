@@ -80,17 +80,14 @@
           <!-- search form -->
           <span class="file_to">Enter words to search e.g. ['a', 'alice'],'book','me',['help']</span>
           <input type="text" name="search_words" id="search_words" class="form-control search" ng-model="search_strings" required>
-          <span class="file_to"> Select File to Search </span>
-          <select name="file" id="file" class="form-control" ng-model="selected_file" ng-options="fn for fn in file_names" required>
+          <span class="file_to"> Select File(s) to Search </span>
+          <select name="file[]" id="file" class="form-control" ng-model="selected_file" ng-options="fn for fn in file_names" required multiple="multiple">
           </select>
           <button ng-click="search()" class="button" class="file_to">Search Index</button>
-          <div style="overflow-x:auto">
+          <div style="overflow-x:auto" ng-repeat="each_index_search_display in index_search_display">
             <table>
-              <tr>
-                <td ng-repeat="search_term in search_terms" ng-if="search_terms.length > 1">{{ search_term }}</td>
-              </tr>
-              <tr ng-repeat="each_search_index_display in index_search_display">
-                <td ng-repeat="search_indice in each_search_index_display track by $index">{{ search_indice }}</td>
+              <tr ng-repeat="each_item_index_search_display in each_index_search_display track by $index" ng-if="each_index_search_display.length > 1">
+                <td ng-repeat="col in each_item_index_search_display track by $index">{{ col }}</td>
               </tr>
             </table>
           </div>
