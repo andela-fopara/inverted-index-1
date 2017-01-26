@@ -8,7 +8,9 @@ import jasmineBrowser from 'gulp-jasmine-browser';
 import watch from 'gulp-watch';
 import babel_register from 'babel-core/register';
 
-const port = process.env.PORT || 8004 
+
+const port = process.env.PORT || 8004;
+
 
 gulp.task('connect', () => {
     connect.server({

@@ -3,83 +3,87 @@
 
 <head>
   <title>Andela Inverted Index Generator</title>
-  <script src="css/bootstrap.css"></script>
+  <link href="css/lib/bootstrap.css" rel="stylesheet" type="text/css">
   <script src="js/lib/jquery.min.js"></script>
   <script type="text/javascript" src="js/lib/bootstrap.js"></script>
   <link rel="stylesheet" type="text/css" href="css/style.css">
 </head>
 
-<body ng-app="InvertedIndex">
-  <div class="container" ng-controller="InvertedIndexController as IICtrl">
+<body ng-app="InvertedIndex" ng-controller="InvertedIndexController as IICtrl">
+  <div class="container">
     <!-- header starts here -->
     <div class="row">
-      <div class="col-md-12 col-sm-12">
-        <div class="row">
-          <div class="col-md-4 col-sm-4">
-            <a href="index.html"><img src="images/logo.png" alt="page_logo" /></a>
-          </div>
-          <div class="col-md-8 col-sm-8">
-            <h1 class="index_header"> INVERTED INDEX GENERATOR </h1>
-          </div>
-        </div>
+      <div class="col-md-4 col-sm-4">
+        <a href="index.html"><img src="images/logo.png" alt="page_logo" class="logo" /></a>
+      </div>
+      <div class="col-md-8 col-sm-8">
+        <h1 class="index_header"> INVERTED INDEX GENERATOR </h1>
       </div>
     </div>
     <!-- header ends here -->
+    <!-- descripttion -->
+    <h3> How to Use </h3>
+    <p> This app simply helps you to create an index for any file you upload. You can upload files singly or in batch, immediately
+      the files are read, the generated index for the last file in the batch is being shown. To view index for others, simply
+      clicking on their buttons by the left. Below the buttons shows the content of the file whose index is currently being
+      shown. You can also search the file for entering the sample data shown or yours. The search can be performed on a single
+      or multiple files.
+    </p>
+    <!-- description ends -->
     <!--body starts here -->
     <div class="row">
-      <div class="col-md-12 col-sm-12">
-        <div class="row">
-          <!-- List of json files start here -->
-          <div class="col-md-3 col-sm-3">
-            <h3 class="sub_title"> List of JSON Files </h3>
-            <div class="row file_box">
-              <div class="col-md-12 col-sm-12">
-                <!-- file upload form starts here -->
-                <input type="file" id="files" name="files" class="drop-box" ng-model="files" ng-click="resetProgress()" accept=".json" multiple="multiple" />
-                <button ng-click="abortRead()">Cancel read</button>
-                <button ng-click="upload()"> upload</button>
-                <div id="progress_bar">
-                  <div class="percent">0%</div>
-                </div>
-                <div class="drop-box" ng-bind-html="trusted_html_content">No File Read Yet</div>
-                <!-- file upload form ends here -->
-                <div>
-                  <!-- list starts here -->
-                  <h5> File(s) Selected </h5>
-                  <p id="file_count">
-                    <span ng-if="file_names.length <= 0">No File Selected</span>
-                    <button ng-repeat="file_name in  file_names" ng-click="file_selected(file_name)" class="file_list"> {{ file_name }}</button>
-                  </p>
-                  <!-- list ends here -->
-                </div>
-              </div>
+      <!-- List of json files start here -->
+      <div class="col-md-3 col-sm-3 sub_title">
+        <h4> List of JSON Files </h4>
+        <div class="row file_box">
+          <div class="col-md-12 col-sm-12">
+            <!-- file upload form starts here -->
+            <input type="file" id="files" name="files" ng-model="files" ng-click="resetProgress()" accept=".json" multiple="multiple"
+              class="form-control" />
+            <button ng-click="upload()" class="button"> Create Index</button>
+            <div id="progress_bar">
+              <div>Progress: <label class="percent">0%</label></div>
             </div>
-          </div>
-          <!-- List of json files ends here -->
-          <!-- Index starts here -->
-          <div class="col-md-6 col-sm-6">
-            <h3 class="sub_title"> Index </h3>
-            <!-- generated index table starts -->
-            <div style="overflow-x:auto">
-              <table>
-                <tr>
-                  <td ng-repeat="term in terms" ng-if="terms.length > 1">{{ term }}</td>
-                </tr>
-                <tr ng-repeat="each_index_display in index_display">
-                  <td ng-repeat="indice in each_index_display track by $index">{{ indice }}</td>
-                </tr>
-              </table>
+            <div>
+              <!-- list starts here -->
+              <h5 class="brick"> File(s) Selected </h5>
+              <p id="file_count">
+                <span ng-if="file_names.length === 0">None</span>
+                <button ng-repeat="file_name in  file_names" ng-click="file_selected(file_name)" class="file_list"> {{ file_name }}</button>
+              </p>
+              <!-- list ends here -->
             </div>
+            <div class="drop-box" ng-bind-html="trusted_html_content">No File Read Yet</div>
+            <!-- file upload form ends here -->
           </div>
-          <!-- generated inde tables ends here -->
         </div>
-        <!-- Index ends here -->
-        <!-- Search starts here -->
-        <div class="col-md-3 col-sm-3">
-          <h3 class="sub_title"> Search </h3>
-          <!-- search form -->
-          <span class="file_to">Enter words to search e.g. ['a', 'alice'],'book','me',['help']</span>
+      </div>
+      <!-- List of json files ends here -->
+      <!-- Index starts here -->
+      <div class="col-md-6 col-sm-6 sub_title">
+        <h4> Index </h4>
+        <!-- generated index table starts -->
+        <div style="overflow-x:auto">
+          <table>
+            <tr>
+              <th ng-repeat="term in terms" ng-if="terms.length > 1">{{ term }}</th>
+            </tr>
+            <tr ng-repeat="each_index_display in index_display">
+              <td ng-repeat="indice in each_index_display track by $index">{{ indice }}</td>
+            </tr>
+          </table>
+        </div>
+      </div>
+      <!-- generated inde tables ends here -->
+      <!-- Index ends here -->
+      <!-- Search starts here -->
+      <div class="col-md-3 col-sm-3 sub_title">
+        <h4> Search </h4>
+        <!-- search form -->
+        <form name="search_file">
+          <span class="file_to" class="brick">Enter words to search e.g. ['a', 'alice'],'book','me',['help']</span>
           <input type="text" name="search_words" id="search_words" class="form-control search" ng-model="search_strings" required>
+
           <span class="file_to"> Select File(s) to Search </span>
           <select name="file[]" id="file" class="form-control" ng-model="selected_file" ng-options="fn for fn in file_names" required multiple="multiple">
           </select>
@@ -91,9 +95,20 @@
               </tr>
             </table>
           </div>
+          <span class="file_to" ng-if="file_names.length > 0" class="brick"> Select File(s) to Search </span>
+          <select ng-if="file_names.length > 0" id="selected_file" name="selected_file[]" ng-model="selected_file" ng-options="fn for fn in file_names" multiple="multiple" required>
+            </select>
+            <button ng-click="search()" class="button" class="file_to">Search Index</button>
+        </form>
+        <div style="overflow-x:auto" ng-repeat="each_index_search_display in index_search_display">
+          <table>
+            <tr ng-repeat="each_item_index_search_display in each_index_search_display track by $index" ng-if="each_index_search_display.length > 1">
+              <td ng-repeat="col in each_item_index_search_display track by $index">{{ col }}</td>
+            </tr>
+          </table>
         </div>
-        <!-- Search ends here -->
       </div>
+      <!-- Search ends here -->
     </div>
     <!-- footer starts here -->
     <div class="col-md-12 col-sm-12 footer">
@@ -102,9 +117,8 @@
     <!-- footer ends here -->
   </div>
   <!-- body ends here -->
-  </div>
-  <!-- container ends here -->
-  <script src="js/lib//angular.min.js"></script>
+  <script src="https://code.angularjs.org/1.4.9/angular.min.js"></script>
+  <script src="https://rawgit.com/dwmkerr/angular-modal-service/master/dst/angular-modal-service.js"></script>
   <script src="js/lib/angular-sanitize.js"></script>
   <script src="/js/inverted-index.js"></script>
   <script src="/js/app.js"></script>

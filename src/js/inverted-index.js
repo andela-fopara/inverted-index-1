@@ -26,9 +26,13 @@ class InvertedIndex {
    * @return {null} returns nothing
    */
   createIndex(FileObject) {
-    if (FileObject.length > 0) {
-      this.books = FileObject;
-      this.generateIndex();
+    const isEmptyStatus = this.isEmpty(FileObject);
+    if (!isEmptyStatus) {
+      const isValidJsonArrayStatus = this.isValidJsonArray(FileObject);
+      if (isValidJsonArrayStatus) {
+        this.books = FileObject;
+        this.generateIndex();
+      }
     }
   }
 
@@ -36,12 +40,12 @@ class InvertedIndex {
    * is empty.
    * It Checks that the books
    * instance variable is not empty
-   * @param {null} accepts no parameter
+   * @param {array} FileObject accepts an array 
    * @return {boolean} value showing if books is empty or not
    */
-  isEmpty() {
+  isEmpty(FileObject) {
     let status = true;
-    if (this.books.length > 0) {
+    if (FileObject.length) {
       status = false;
     }
     return status;
@@ -55,45 +59,45 @@ class InvertedIndex {
    * @return {null} returns no value
    */
   generateIndex() {
-    const IndexTemp = {};
+    let IndexTemp = {};
     let title = [];
     let text = [];
-    let mostFrequency = 0;
     for (let i = 0; i < this.books.length; i++) {
       const Obj = this.books[i];
       title = this.removePunctuation(Obj.title).split(' ');
       text = this.removePunctuation(Obj.text).split(' ');
-      for (let j = 0; j < title.length; j++) {
-        title[j] = title[j].toLowerCase();
-        if (IndexTemp[title[j]] !== undefined && IndexTemp[title[j]].includes(i + 1)) {
-          continue;
-        } else {
-          if (IndexTemp[title[j]] === undefined) {
-            IndexTemp[title[j]] = [];
-          }
-          IndexTemp[title[j]].push(i + 1);
-          if (IndexTemp[title[j]].length > mostFrequency) {
-            mostFrequency = IndexTemp[title[j]].length;
-          }
+      IndexTemp = this.process(title, IndexTemp, i);
+      IndexTemp = this.process(text, IndexTemp, i);
+    }
+    this.index = IndexTemp;
+  }
+
+  /**
+   * process.
+   * It processes the passed text to index it
+   * following the object array read
+   * @param {array} textOrTitle takes an array of strings
+   * @param {object} IndexTemp takes a js object
+   * @param {number} counter takes a number indicating the document being considered
+   * @return {object} returns no value
+   */
+  process(textOrTitle, IndexTemp, counter) {
+    for (let j = 0; j < textOrTitle.length; j++) {
+      textOrTitle[j] = textOrTitle[j].toLowerCase();
+      if (IndexTemp[textOrTitle[j]] !== undefined &&
+        IndexTemp[textOrTitle[j]].includes(counter + 1)) {
+        continue;
+      } else {
+        if (IndexTemp[textOrTitle[j]] === undefined) {
+          IndexTemp[textOrTitle[j]] = [];
         }
-      }
-      for (let j = 0; j < text.length; j++) {
-        text[j] = text[j].toLowerCase();
-        if (IndexTemp[text[j]] !== undefined && IndexTemp[text[j]].includes(i + 1)) {
-          continue;
-        } else {
-          if (IndexTemp[text[j]] === undefined) {
-            IndexTemp[text[j]] = [];
-          }
-          IndexTemp[text[j]].push(i + 1);
-          if (IndexTemp[text[j]].length > mostFrequency) {
-            mostFrequency = IndexTemp[text[j]].length;
-          }
+        IndexTemp[textOrTitle[j]].push(counter + 1);
+        if (IndexTemp[textOrTitle[j]].length > this.mostFrequency) {
+          this.mostFrequency = IndexTemp[textOrTitle[j]].length;
         }
       }
     }
-    this.index = IndexTemp;
-    this.mostFrequency = mostFrequency;
+    return IndexTemp;
   }
 
   /**
@@ -133,10 +137,10 @@ class InvertedIndex {
       for (let i = 0; i < terms.length; i++) {
         if (typeof (terms[i]) === typeof ([])) {
           for (let j = 0; j < terms[i].length; j++) {
-            term = term + ' ' + terms[i][j];
+            term = `${term} ${terms[i][j]}`;
           }
         } else {
-          term = term + ' ' + terms[i];
+          term = `${term} ${terms[i]}`;
         }
       }
     } else {
@@ -201,7 +205,7 @@ class InvertedIndex {
    */
   areAllValidIndex(searchResult, correctArrayOfIndices) {
     let status = false;
-    for (let i = 0; i < searchResult.length; i++) {
+    for (let i = 0; i < correctArrayOfIndices.length; i++) {
       for (let j = 0; j < correctArrayOfIndices.length; j++) {
         if (searchResult[i][j] === correctArrayOfIndices[i][j]) {
           status = true;
@@ -248,19 +252,19 @@ class InvertedIndex {
   /**
    * is valid json array
    * checks that the file read contains a valid json array
-   * @param {null} No parameter
+   * @param {array} fileContent An array of objects
    * @returns {boolean} status indicating validity.
    */
-  isValidJsonArray() {
+  isValidJsonArray(fileContent) {
     let status = false;
-    if (typeof (this.books) === typeof ([])) {
-      for (let i = 0; i < this.books.length; i++) {
-        if (typeof (this.books[i]) === typeof ({})) {
+    if (typeof (fileContent) === typeof ([])) {
+      for (let i = 0; i < fileContent.length; i++) {
+        if (typeof (fileContent[i]) === typeof ({}) && fileContent[i]['title'] && fileContent[i]['text']) {
           status = true;
         }
       }
     }
     return status;
   }
-
 }
+
