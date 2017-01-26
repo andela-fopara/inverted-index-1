@@ -6,7 +6,7 @@
   "scripts": {
     "test": "gulp test",
     "start": "gulp",
-    "postinstall": "npm install gulp"
+    "postinstall": "npm3 install gulp"
   },
   "repository": {
     "type": "git",
