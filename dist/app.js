@@ -76,7 +76,6 @@ nameSpace.controller('InvertedIndexController', ['$scope', '$sce', 'ModalService
     // evt is an ProgressEvent.
     if (evt.lengthComputable) {
       const percentLoaded = Math.round((evt.loaded / evt.total) * 100);
-      // Increase the progress bar length.
       if (percentLoaded < 100) {
         $scope.progress.style.width = `${percentLoaded}%`;
         $scope.progress.textContent = `${percentLoaded}%`;
@@ -88,8 +87,7 @@ nameSpace.controller('InvertedIndexController', ['$scope', '$sce', 'ModalService
    * @ngdoc function
    * @name handleFileSelect
    * @methodOf InvertedIndex.InvertedIndexController:InvertedIndexController
-   * @description
-   * This function reads the selected file,
+   * @description This function reads the selected file,
    * resets progress bar on new file selection,
    * calls function to prepare generated index for viewing
    */
@@ -211,15 +209,19 @@ nameSpace.controller('InvertedIndexController', ['$scope', '$sce', 'ModalService
    * calls function to transform the search result to human readable form
    */
   $scope.search = () => {
-    console.log(this.selected_file);
+    $scope.selected_file = [];
+    $scope.setSelectedValues();
+    $scope.index_search_display = [];
+    console.log($scope.index_search_display);
     for (let i = 0; i < $scope.selected_file.length; i++) {
-
+      console.log($scope.index_search_display);
       let search_result = $scope.invertedIndex.search($scope.allFiles[$scope.selected_file[i]], $scope.search_strings);
       let search_words_array = $scope.invertedIndex.removePunctuation($scope.search_strings).split(" ");
       let search_in_view = $scope.prepareSearchIndexViewComponents(search_words_array, search_result, i);
       $scope.index_search_display[i] = search_in_view;
     }
     $scope.index = $scope.invertedIndex.index;
+    console.log($scope.index_search_display);
   };
 
   /**
@@ -260,6 +262,15 @@ nameSpace.controller('InvertedIndexController', ['$scope', '$sce', 'ModalService
     return index_search_display_temp;
   };
 
+  $scope.setSelectedValues = () => {
+    let x = document.getElementById("selected_file");
+    for (let i = 0; i < x.options.length; i++) {
+      if(x.options[i].selected ==true){
+            $scope.selected_file.push(x.options[i].text);
+        }
+    }
+  };
+
   $scope.showErrorModal = function () {
     if ($scope.notValidJSONFile) {
       $scope.error_message = "Invalid File Content ";
@@ -284,6 +295,9 @@ nameSpace.controller('InvertedIndexController', ['$scope', '$sce', 'ModalService
         if ($scope.isEmptyFile) {
           $scope.isEmptyFile = false;
         }
+        if ($scope.fileALreadyUploaded) {
+          $scope.fileALreadyUploaded = false;
+      }
       });
     });
   };
