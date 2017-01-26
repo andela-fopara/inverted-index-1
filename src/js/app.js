@@ -6,7 +6,6 @@
  **/
 const nameSpace = angular.module('InvertedIndex', ['ngSanitize', 'angularModalService']);
 
-
 /**
  * @ngdoc controller
  * @name InvertedIndex.InvertedIndexController:InvertedIndexController
@@ -24,18 +23,14 @@ nameSpace.controller('InvertedIndexController', ['$scope', '$sce', 'ModalService
   $scope.index = null;
   $scope.allMostFrequency = {};
   $scope.allContents = {};
-
   $scope.terms = ['Term'];
-
   $scope.words = null;
-
   $scope.index_display = [];
   $scope.index_search_display = [];
   $scope.selected_file = [];
   $scope.search_terms = [];
   $scope.search_words_array = '';
   $scope.allSearchResult = [];
-
   let reader;
 
   /**
@@ -52,7 +47,6 @@ nameSpace.controller('InvertedIndexController', ['$scope', '$sce', 'ModalService
       $scope.handleFileSelect();
     }
   };
-
 
   /**
    * @ngdoc function
@@ -141,7 +135,6 @@ nameSpace.controller('InvertedIndexController', ['$scope', '$sce', 'ModalService
     }
   };
 
-
   /**
    * @ngdoc function
    * @name file_selected
@@ -212,16 +205,13 @@ nameSpace.controller('InvertedIndexController', ['$scope', '$sce', 'ModalService
     $scope.selected_file = [];
     $scope.setSelectedValues();
     $scope.index_search_display = [];
-    console.log($scope.index_search_display);
     for (let i = 0; i < $scope.selected_file.length; i++) {
-      console.log($scope.index_search_display);
       let search_result = $scope.invertedIndex.search($scope.allFiles[$scope.selected_file[i]], $scope.search_strings);
       let search_words_array = $scope.invertedIndex.removePunctuation($scope.search_strings).split(" ");
       let search_in_view = $scope.prepareSearchIndexViewComponents(search_words_array, search_result, i);
       $scope.index_search_display[i] = search_in_view;
     }
     $scope.index = $scope.invertedIndex.index;
-    console.log($scope.index_search_display);
   };
 
   /**
@@ -262,15 +252,34 @@ nameSpace.controller('InvertedIndexController', ['$scope', '$sce', 'ModalService
     return index_search_display_temp;
   };
 
+  /**
+   * @ngdoc function
+   * @name setSelectedValues
+   * @methodOf InvertedIndex.InvertedIndexController:InvertedIndexController
+   * @description
+   * This function helps me to do 
+   * a dom manipulation 
+   * to get the selected file options to 
+   * perform the search on
+   */
   $scope.setSelectedValues = () => {
     let x = document.getElementById("selected_file");
     for (let i = 0; i < x.options.length; i++) {
-      if(x.options[i].selected ==true){
-            $scope.selected_file.push(x.options[i].text);
-        }
+      if (x.options[i].selected == true) {
+        $scope.selected_file.push(x.options[i].text);
+      }
     }
   };
 
+  /**
+   * @ngdoc function
+   * @name showErrorModal
+   * @methodOf InvertedIndex.InvertedIndexController:InvertedIndexController
+   * @description
+   * This function helps me to 
+   * show all error modal depending the $scope
+   * error code set
+   */
   $scope.showErrorModal = function () {
     if ($scope.notValidJSONFile) {
       $scope.error_message = "Invalid File Content ";
@@ -297,11 +306,23 @@ nameSpace.controller('InvertedIndexController', ['$scope', '$sce', 'ModalService
         }
         if ($scope.fileALreadyUploaded) {
           $scope.fileALreadyUploaded = false;
-      }
+        }
       });
     });
   };
 }]);
+
+/**
+ * @ngdoc controller
+ * @name InvertedIndex.ErrorModalController:ErrorModalController
+ * @description
+ * A controller that controls the error 
+ * modals displayed at each point 
+ * It also contains an attribute directive
+ * that removes the black overlay over the screen
+ * @param {String, array} The name of controller and an  array of global variables/callback function
+ * @returns {null} Returns nothing
+ */
 nameSpace.controller('ErrorModalController', ['$scope', '$element', 'close', ($scope, $element, close) => {
   $scope.dismissModal = function (result) {
     close(result, 200); // close, but give 200ms for bootstrap to animate

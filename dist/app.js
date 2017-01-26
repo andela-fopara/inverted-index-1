@@ -212,16 +212,13 @@ nameSpace.controller('InvertedIndexController', ['$scope', '$sce', 'ModalService
     $scope.selected_file = [];
     $scope.setSelectedValues();
     $scope.index_search_display = [];
-    console.log($scope.index_search_display);
     for (let i = 0; i < $scope.selected_file.length; i++) {
-      console.log($scope.index_search_display);
       let search_result = $scope.invertedIndex.search($scope.allFiles[$scope.selected_file[i]], $scope.search_strings);
       let search_words_array = $scope.invertedIndex.removePunctuation($scope.search_strings).split(" ");
       let search_in_view = $scope.prepareSearchIndexViewComponents(search_words_array, search_result, i);
       $scope.index_search_display[i] = search_in_view;
     }
     $scope.index = $scope.invertedIndex.index;
-    console.log($scope.index_search_display);
   };
 
   /**
