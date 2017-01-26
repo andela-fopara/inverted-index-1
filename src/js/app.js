@@ -4,7 +4,7 @@
  * @description
  * This is InvertedIndex module.
  **/
-const nameSpace = angular.module('InvertedIndex', ['ngSanitize']);
+const nameSpace = angular.module('InvertedIndex', ['ngSanitize', 'angularModalService']);
 
 
 /**
@@ -17,7 +17,7 @@ const nameSpace = angular.module('InvertedIndex', ['ngSanitize']);
  * @param {String, array} The name of controller and an  array of global variables/callback function
  * @returns {null} Returns nothing
  */
-nameSpace.controller('InvertedIndexController', ['$scope', '$sce', ($scope, $sce) => {
+nameSpace.controller('InvertedIndexController', ['$scope', '$sce', 'ModalService', ($scope, $sce, ModalService) => {
   $scope.allFiles = {};
   $scope.file_names = [];
   $scope.invertedIndex = new InvertedIndex();
@@ -31,10 +31,9 @@ nameSpace.controller('InvertedIndexController', ['$scope', '$sce', ($scope, $sce
 
   $scope.index_display = [];
   $scope.index_search_display = [];
-
+  $scope.selected_file = [];
   $scope.search_terms = [];
   $scope.search_words_array = '';
-  $scope.selected_file = [];
   $scope.allSearchResult = [];
 
   let reader;
@@ -68,28 +67,6 @@ nameSpace.controller('InvertedIndexController', ['$scope', '$sce', ($scope, $sce
 
   /**
    * @ngdoc function
-   * @name errorHandler
-   * @methodOf InvertedIndex.InvertedIndexController:InvertedIndexController
-   * @description
-   * This function handles error that occur during file reading
-   */
-  $scope.errorHandler = (evt) => {
-    switch (evt.target.error.code) {
-      case evt.target.error.NOT_FOUND_ERR:
-        alert('File Not Found!');
-        break;
-      case evt.target.error.NOT_READABLE_ERR:
-        alert('File is not readable');
-        break;
-      case evt.target.error.ABORT_ERR:
-        break;
-      default:
-        alert('An error occurred reading this file.');
-    }
-  };
-
-  /**
-   * @ngdoc function
    * @name updateProgress
    * @methodOf InvertedIndex.InvertedIndexController:InvertedIndexController
    * @description
@@ -99,7 +76,6 @@ nameSpace.controller('InvertedIndexController', ['$scope', '$sce', ($scope, $sce
     // evt is an ProgressEvent.
     if (evt.lengthComputable) {
       const percentLoaded = Math.round((evt.loaded / evt.total) * 100);
-      // Increase the progress bar length.
       if (percentLoaded < 100) {
         $scope.progress.style.width = `${percentLoaded}%`;
         $scope.progress.textContent = `${percentLoaded}%`;
@@ -111,58 +87,58 @@ nameSpace.controller('InvertedIndexController', ['$scope', '$sce', ($scope, $sce
    * @ngdoc function
    * @name handleFileSelect
    * @methodOf InvertedIndex.InvertedIndexController:InvertedIndexController
-   * @description
-   * This function reads the selected file,
+   * @description This function reads the selected file,
    * resets progress bar on new file selection,
    * calls function to prepare generated index for viewing
    */
   $scope.handleFileSelect = (evt) => {
-
     let fileArray = document.getElementById('files').files;
-
     for (let i = 0; i < fileArray.length; i++) {
-
       $scope.progress.style.width = '0%';
       $scope.progress.textContent = '0%';
-
       reader = new FileReader();
       reader.onabort = e => {
-        alert('File read cancelled');
+        $scope.readerAborted = true;
+        $scope.showErrorModal();
       };
       reader.onloadstart = e => {
         document.getElementById('progress_bar').className = 'loading';
       };
-
       reader.onload = e => {
-        $scope.progress.textContent = '100%';
         let content = e.target.result;
         $scope.$apply(() => {
           $scope.content = content;
-          $scope.file_object = JSON.parse(content);
-          $scope.files = fileArray[i];
-          $scope.allFiles[$scope.files.name] = $scope.file_object;
-          $scope.file_names.push($scope.files.name);
-          $scope.allContents[$scope.files.name] = $scope.content;
-          $scope.trusted_html_content = $sce.trustAsHtml(`<p><code>${$scope.content}</code></p>`);
-          $scope.invertedIndex.createIndex($scope.file_object);
-          $scope.index = $scope.invertedIndex.index;
-          $scope.allMostFrequency[$scope.files.name] = $scope.invertedIndex.mostFrequency;
-          $scope.prepareIndexViewComponents();
-
+          if ($scope.file_names.indexOf(fileArray[i].name) === -1) {
+            if ($scope.content) {
+              $scope.file_object = JSON.parse(content);
+              if ($scope.invertedIndex.isValidJsonArray($scope.file_object)) {
+                $scope.invertedIndex.createIndex($scope.file_object);
+                $scope.files = fileArray[i];
+                $scope.allFiles[$scope.files.name] = $scope.file_object;
+                $scope.file_names.push($scope.files.name);
+                $scope.allContents[$scope.files.name] = $scope.content;
+                $scope.trusted_html_content = $sce.trustAsHtml(`<p><code>${$scope.content}</code></p>`);
+                $scope.index = $scope.invertedIndex.index;
+                $scope.allMostFrequency[$scope.files.name] = $scope.invertedIndex.mostFrequency;
+                $scope.progress.textContent = '100%';
+                $scope.prepareIndexViewComponents();
+              } else {
+                $scope.notValidJSONFile = true;
+                $scope.showErrorModal();
+              }
+            } else {
+              $scope.isEmptyFile = true;
+              $scope.showErrorModal();
+            }
+          } else {
+            $scope.fileALreadyUploaded = true;
+            $scope.showErrorModal();
+          }
         });
-
-
         setTimeout("document.getElementById('progress_bar').className='';", 2000);
-
-
-
       };
-
-
       reader.readAsText(fileArray[i]);
-
     }
-
   };
 
 
@@ -240,7 +216,7 @@ nameSpace.controller('InvertedIndexController', ['$scope', '$sce', ($scope, $sce
       $scope.index_search_display[i] = search_in_view;
     }
     $scope.index = $scope.invertedIndex.index;
-    };
+  };
 
   /**
    * @ngdoc function
@@ -249,7 +225,7 @@ nameSpace.controller('InvertedIndexController', ['$scope', '$sce', ($scope, $sce
    * @description
    * This function searches prepares the search result into a human readble form
    */
-  $scope.prepareSearchIndexViewComponents = (search_words_array, search_result,counter) => {
+  $scope.prepareSearchIndexViewComponents = (search_words_array, search_result, counter) => {
     $scope.search_terms = ["Terms"];
     $scope.trusted_html_content = $sce.trustAsHtml(`<p><code>${$scope.allContents[$scope.selected_file[counter]]}</code></p>`);
     for (var i = 0; i < $scope.allMostFrequency[$scope.selected_file[counter]]; i++) {
@@ -259,20 +235,68 @@ nameSpace.controller('InvertedIndexController', ['$scope', '$sce', ($scope, $sce
     let index_search_display_item = [];
     let size = search_result.length;
     for (let i = 0; i < size; i++) {
+      let found = false;
       index_search_display_item.push(search_words_array[i]);
       let k = 0;
       for (let j = 0; j < $scope.allMostFrequency[$scope.selected_file[counter]]; j++) {
         let doc_id = j + 1;
         if (doc_id == search_result[i][k]) {
+          found = true;
           index_search_display_item.push("X");
           k = k + 1;
         } else {
           index_search_display_item.push(" ");
         }
       }
-      index_search_display_temp.push(index_search_display_item);
-      index_search_display_item = [];
+      if (found) {
+        index_search_display_temp.push(index_search_display_item);
       }
-      return index_search_display_temp;
+      index_search_display_item = [];
+    }
+    return index_search_display_temp;
+  };
+
+  $scope.showErrorModal = function () {
+    if ($scope.notValidJSONFile) {
+      $scope.error_message = "Invalid File Content ";
+    }
+    if ($scope.isEmptyFile) {
+      $scope.error_message = "JSON File is empty ";
+    }
+    if ($scope.fileALreadyUploaded) {
+      $scope.error_message = "File(s) has already been uploaded!";
+    }
+    $scope.title = "Fatal Error";
+    ModalService.showModal({
+      templateUrl: "error_modal.html",
+      controller: "ErrorModalController",
+      scope: $scope
+    }).then(function (modal) {
+      modal.element.modal();
+      modal.close.then(function (result) {
+        if ($scope.notValidJSONFile) {
+          $scope.notValidJSONFile = false;
+        }
+        if ($scope.isEmptyFile) {
+          $scope.isEmptyFile = false;
+        }
+      });
+    });
+  };
+}]);
+nameSpace.controller('ErrorModalController', ['$scope', '$element', 'close', ($scope, $element, close) => {
+  $scope.dismissModal = function (result) {
+    close(result, 200); // close, but give 200ms for bootstrap to animate
+  };
+}]).directive('removeModal', ['$document', function ($document) {
+  return {
+    restrict: 'A',
+    link: function (scope, element, attrs) {
+      element.bind('click', function () {
+        $document[0].body.classList.remove('modal-open');
+        angular.element($document[0].getElementsByClassName('modal-backdrop')).remove();
+        angular.element($document[0].getElementsByClassName('modal')).remove();
+      });
+    }
   };
 }]);

@@ -39,7 +39,8 @@
     ]
   },
   "dependencies": {
-    "babel-polyfill": "^6.20.0",
+    "angular-animate": "^1.6.1",
+    "angular-modal-service": "^0.10.1",
     "babel": "^6.5.2",
     "babel-core": "^6.21.0",
     "babel-polyfill": "^6.20.0",
