@@ -59,6 +59,7 @@ class InvertedIndex {
    * @return {null} returns no value
    */
   generateIndex() {
+
     let IndexTemp = {};
     let title = [];
     let text = [];
@@ -97,7 +98,6 @@ class InvertedIndex {
         }
       }
     }
-    return IndexTemp;
   }
 
   /**
@@ -266,5 +266,4 @@ class InvertedIndex {
     }
     return status;
   }
-
 }

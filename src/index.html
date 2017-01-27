@@ -83,6 +83,7 @@
         <form name="search_file">
           <span class="file_to" class="brick">Enter words to search e.g. ['a', 'alice'],'book','me',['help']</span>
           <input type="text" name="search_words" id="search_words" class="form-control search" ng-model="search_strings" required>
+
           <span class="file_to" ng-if="file_names.length > 0" class="brick"> Select File(s) to Search </span>
           <select ng-if="file_names.length > 0" id="selected_file" name="selected_file[]" ng-model="selected_file" ng-options="fn for fn in file_names" multiple="multiple" required>
             </select>

@@ -266,5 +266,5 @@ class InvertedIndex {
     }
     return status;
   }
-
 }
+

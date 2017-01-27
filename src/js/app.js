@@ -232,6 +232,7 @@ nameSpace.controller('InvertedIndexController', ['$scope', '$sce', 'ModalService
     let index_search_display_item = [];
     let size = search_result.length;
     for (let i = 0; i < size; i++) {
+
       let found = false;
       index_search_display_item.push(search_words_array[i]);
       let k = 0;

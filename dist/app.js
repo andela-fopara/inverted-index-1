@@ -4,6 +4,7 @@
  * @description
  * This is InvertedIndex module.
  **/
+
 const nameSpace = angular.module('InvertedIndex', ['ngSanitize', 'angularModalService']);
 
 /**
@@ -27,6 +28,7 @@ nameSpace.controller('InvertedIndexController', ['$scope', '$sce', 'ModalService
   $scope.words = null;
   $scope.index_display = [];
   $scope.index_search_display = [];
+
   $scope.selected_file = [];
   $scope.search_terms = [];
   $scope.search_words_array = '';
@@ -213,6 +215,7 @@ nameSpace.controller('InvertedIndexController', ['$scope', '$sce', 'ModalService
       $scope.index_search_display[i] = search_in_view;
     }
     $scope.index = $scope.invertedIndex.index;
+    };
   };
 
   /**
@@ -222,7 +225,8 @@ nameSpace.controller('InvertedIndexController', ['$scope', '$sce', 'ModalService
    * @description
    * This function searches prepares the search result into a human readble form
    */
-  $scope.prepareSearchIndexViewComponents = (search_words_array, search_result, counter) => {
+  $scope.prepareSearchIndexViewComponents = (search_words_array, search_result,counter) => {
+
     $scope.search_terms = ["Terms"];
     $scope.trusted_html_content = $sce.trustAsHtml(`<p><code>${$scope.allContents[$scope.selected_file[counter]]}</code></p>`);
     for (var i = 0; i < $scope.allMostFrequency[$scope.selected_file[counter]]; i++) {
@@ -232,19 +236,30 @@ nameSpace.controller('InvertedIndexController', ['$scope', '$sce', 'ModalService
     let index_search_display_item = [];
     let size = search_result.length;
     for (let i = 0; i < size; i++) {
+
       let found = false;
+
       index_search_display_item.push(search_words_array[i]);
       let k = 0;
       for (let j = 0; j < $scope.allMostFrequency[$scope.selected_file[counter]]; j++) {
         let doc_id = j + 1;
         if (doc_id == search_result[i][k]) {
+
           found = true;
+
           index_search_display_item.push("X");
           k = k + 1;
         } else {
           index_search_display_item.push(" ");
         }
       }
+
+      index_search_display_temp.push(index_search_display_item);
+      index_search_display_item = [];
+      }
+      return index_search_display_temp;
+  };
+
       if (found) {
         index_search_display_temp.push(index_search_display_item);
       }
@@ -311,6 +326,7 @@ nameSpace.controller('InvertedIndexController', ['$scope', '$sce', 'ModalService
       });
     });
   };
+
 }]);
 
 /**

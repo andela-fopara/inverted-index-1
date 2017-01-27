@@ -59,6 +59,16 @@
     "gulp-jasmine-browser": "^1.7.1",
     "gulp-jasmine-livereload-task": "^0.10.1",
     "gulp-notify": "^2.2.0",
-    "gulp-open": "^2.0.0"
+    "gulp-open": "^2.0.0",
+    "jasmine": "^2.5.3"
+  },
+  "babel": {
+    "presets": [
+      "es2015"
+    ]
+  },
+  "dependencies": {
+    "babel-polyfill": "^6.20.0"
+
   }
 }
