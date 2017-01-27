@@ -62,10 +62,9 @@ gulp.task('test', ()=> {
   return gulp.src(filesForTest)
    .pipe(watch(filesForTest))
     .pipe(jasmineBrowser.specRunner())
-   .pipe(jasmineBrowser.server({port: 8888}));
+   .pipe(jasmineBrowser.server({port}));
 
 });
-
 
 //Run 'gulp coveralls' to
 //send data to coveralls

@@ -103,6 +103,7 @@ nameSpace.controller('InvertedIndexController', ['$scope', '$sce', 'ModalService
         $scope.$apply(() => {
           $scope.content = content;
           if ($scope.file_names.indexOf(fileArray[i].name) === -1) {
+            console.log($scope.content);
             if ($scope.content) {
               $scope.file_object = JSON.parse(content);
               if ($scope.invertedIndex.isValidJsonArray($scope.file_object)) {
@@ -285,10 +286,10 @@ nameSpace.controller('InvertedIndexController', ['$scope', '$sce', 'ModalService
     if ($scope.notValidJSONFile) {
       $scope.error_message = "Invalid File Content ";
     }
-    if ($scope.isEmptyFile) {
+    else if ($scope.isEmptyFile) {
       $scope.error_message = "JSON File is empty ";
     }
-    if ($scope.fileALreadyUploaded) {
+    else{
       $scope.error_message = "File(s) has already been uploaded!";
     }
     $scope.title = "Fatal Error";
@@ -302,10 +303,10 @@ nameSpace.controller('InvertedIndexController', ['$scope', '$sce', 'ModalService
         if ($scope.notValidJSONFile) {
           $scope.notValidJSONFile = false;
         }
-        if ($scope.isEmptyFile) {
+        else if ($scope.isEmptyFile) {
           $scope.isEmptyFile = false;
         }
-        if ($scope.fileALreadyUploaded) {
+        else{
           $scope.fileALreadyUploaded = false;
         }
       });
