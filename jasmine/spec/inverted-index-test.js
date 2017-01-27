@@ -27,7 +27,7 @@ describe("Read book data -:", () => {
 describe("Populate Index -:", () => {
   let invertedIndex = new InvertedIndex();
   let book1 = [{
-      "title": "Ada in Wonderland",
+      "title": "Ada in the Wonderland",
       "text": "Going to the Moon!"
     },
     {
@@ -186,6 +186,27 @@ describe("Search index -:", () => {
       expect(correctArrayOfIndices[4]).toEqual(invertedIndex.index['hello']);
     });
   });
+
+  let correctArrayOfIndicesForGetIndex = [ [1],[1],[2],[1] ];
+
+  describe("Confirm that I can get the index of a particular document in a book-:", () => {
+    it("assert that correctArrayOfIndices[0] === invertedIndex.index['ada']",() => {
+      expect(correctArrayOfIndices[0]).toEqual(invertedIndex.index['ada']);
+    });
+    it("assert that correctArrayOfIndices[1] === invertedIndex.index['in']",() => {
+      expect(correctArrayOfIndices[1]).toEqual(invertedIndex.index['in']);
+    });
+    it("assert that correctArrayOfIndices[2] === invertedIndex.index['world']",() => {
+      expect(correctArrayOfIndices[2]).toEqual(invertedIndex.index['world']);
+    });
+    it("assert that correctArrayOfIndices[3] === invertedIndex.index['moon']",() => {
+      expect(correctArrayOfIndices[3]).toEqual(invertedIndex.index['moon']);
+    });
+    it("assert that correctArrayOfIndices[4] === invertedIndex.index['moon']",() => {
+      expect(correctArrayOfIndices[4]).toEqual(invertedIndex.index['hello']);
+    });
+  });
+
   it("assert that search returns an array of indices of the correct objects that contain the words in the search query - File Name not specified", () => {
     expect(invertedIndex.areAllValidIndex(searchResult, correctArrayOfIndices)).toBeTruthy();
   });
