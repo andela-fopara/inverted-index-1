@@ -6,7 +6,6 @@
  **/
 const nameSpace = angular.module('InvertedIndex', ['ngSanitize', 'angularModalService']);
 
-
 /**
  * @ngdoc controller
  * @name InvertedIndex.InvertedIndexController:InvertedIndexController
@@ -24,18 +23,14 @@ nameSpace.controller('InvertedIndexController', ['$scope', '$sce', 'ModalService
   $scope.index = null;
   $scope.allMostFrequency = {};
   $scope.allContents = {};
-
   $scope.terms = ['Term'];
-
   $scope.words = null;
-
   $scope.index_display = [];
   $scope.index_search_display = [];
   $scope.selected_file = [];
   $scope.search_terms = [];
   $scope.search_words_array = '';
   $scope.allSearchResult = [];
-
   let reader;
 
   /**
@@ -52,7 +47,6 @@ nameSpace.controller('InvertedIndexController', ['$scope', '$sce', 'ModalService
       $scope.handleFileSelect();
     }
   };
-
 
   /**
    * @ngdoc function
@@ -109,6 +103,7 @@ nameSpace.controller('InvertedIndexController', ['$scope', '$sce', 'ModalService
         $scope.$apply(() => {
           $scope.content = content;
           if ($scope.file_names.indexOf(fileArray[i].name) === -1) {
+            console.log($scope.content);
             if ($scope.content) {
               $scope.file_object = JSON.parse(content);
               if ($scope.invertedIndex.isValidJsonArray($scope.file_object)) {
@@ -140,7 +135,6 @@ nameSpace.controller('InvertedIndexController', ['$scope', '$sce', 'ModalService
       reader.readAsText(fileArray[i]);
     }
   };
-
 
   /**
    * @ngdoc function
@@ -259,23 +253,42 @@ nameSpace.controller('InvertedIndexController', ['$scope', '$sce', 'ModalService
     return index_search_display_temp;
   };
 
+  /**
+   * @ngdoc function
+   * @name setSelectedValues
+   * @methodOf InvertedIndex.InvertedIndexController:InvertedIndexController
+   * @description
+   * This function helps me to do 
+   * a dom manipulation 
+   * to get the selected file options to 
+   * perform the search on
+   */
   $scope.setSelectedValues = () => {
     let x = document.getElementById("selected_file");
     for (let i = 0; i < x.options.length; i++) {
-      if(x.options[i].selected ==true){
-            $scope.selected_file.push(x.options[i].text);
-        }
+      if (x.options[i].selected == true) {
+        $scope.selected_file.push(x.options[i].text);
+      }
     }
   };
 
+  /**
+   * @ngdoc function
+   * @name showErrorModal
+   * @methodOf InvertedIndex.InvertedIndexController:InvertedIndexController
+   * @description
+   * This function helps me to 
+   * show all error modal depending the $scope
+   * error code set
+   */
   $scope.showErrorModal = function () {
     if ($scope.notValidJSONFile) {
       $scope.error_message = "Invalid File Content ";
     }
-    if ($scope.isEmptyFile) {
+    else if ($scope.isEmptyFile) {
       $scope.error_message = "JSON File is empty ";
     }
-    if ($scope.fileALreadyUploaded) {
+    else{
       $scope.error_message = "File(s) has already been uploaded!";
     }
     $scope.title = "Fatal Error";
@@ -289,16 +302,28 @@ nameSpace.controller('InvertedIndexController', ['$scope', '$sce', 'ModalService
         if ($scope.notValidJSONFile) {
           $scope.notValidJSONFile = false;
         }
-        if ($scope.isEmptyFile) {
+        else if ($scope.isEmptyFile) {
           $scope.isEmptyFile = false;
         }
-        if ($scope.fileALreadyUploaded) {
+        else{
           $scope.fileALreadyUploaded = false;
-      }
+        }
       });
     });
   };
 }]);
+
+/**
+ * @ngdoc controller
+ * @name InvertedIndex.ErrorModalController:ErrorModalController
+ * @description
+ * A controller that controls the error 
+ * modals displayed at each point 
+ * It also contains an attribute directive
+ * that removes the black overlay over the screen
+ * @param {String, array} The name of controller and an  array of global variables/callback function
+ * @returns {null} Returns nothing
+ */
 nameSpace.controller('ErrorModalController', ['$scope', '$element', 'close', ($scope, $element, close) => {
   $scope.dismissModal = function (result) {
     close(result, 200); // close, but give 200ms for bootstrap to animate
