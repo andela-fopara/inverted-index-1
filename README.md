@@ -1,6 +1,5 @@
 
 ### Inverted-Index
-
 [![Coverage Status](https://coveralls.io/repos/github/andela-f-opara/inverted-index-1/badge.svg?branch=development)](https://coveralls.io/github/andela-f-opara/inverted-index-1?branch=development)
 [![Build Status](https://travis-ci.org/andela-f-opara/inverted-index-1.svg?branch=development)](https://travis-ci.org/andela-f-opara/inverted-index-1)
 
