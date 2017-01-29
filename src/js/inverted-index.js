@@ -159,7 +159,6 @@ class InvertedIndex {
   /**
    * is index created
    * Check if index was created
-   * @param {boolean} The true/false value.
    * @returns {boolean} returns nothing
    */
   isIndexCreated() {
