@@ -1,6 +1,6 @@
 
 ### Inverted-Index
-[![Coverage Status](https://coveralls.io/repos/github/andela-f-opara/inverted-index-1/badge.svg?branch=development)](https://coveralls.io/github/andela-f-opara/inverted-index-1?branch=development)
+[![Coverage Status](https://coveralls.io/repos/github/andela-fopara/inverted-index-1/badge.svg?branch=development)](https://coveralls.io/github/andela-fopara/inverted-index-1?branch=development)
 [![Build Status](https://travis-ci.org/andela-f-opara/inverted-index-1.svg?branch=development)](https://travis-ci.org/andela-f-opara/inverted-index-1)
 
 This is an application that generates Index for uploaded files. The files can be uploaded in groups or singly. The files are expected to contain an array of JSON objects, else an error is thrown. The JSON objects are expected to be documents with keys 'title' and 'text'. After the generation of the index, user can search for a group of words from any of the uploaded files.
