@@ -1,93 +1,119 @@
 /* test suites for the inverted index project */
+let invertedIndex = new InvertedIndex();
+const book1 = [{
+    "title": "Alice in Wonderland",
+    "text": "Alice falls into a rabbit hole and enters a world full of imagination."
+  },
+  {
+    "title": "The Lord of the Rings: The Fellowship of the Ring.",
+    "text": "An unusual alliance of man, elf, dwarf, wizard and hobbit seek to destroy a powerful ring."
+  }
+];
+const book2 = [];
+const book3 = [{
+    "title": "Ada in the Wonderland",
+    "text": "Going to the Moon!"
+  },
+  {
+    "title": "Obi is a boy",
+    "text": "Rules the world."
+  }
+];
+const book4 = [{
+    "echo": "Ada in Wonderland",
+    "me": "Going to the Moon!"
+  },
+  {
+    "you": "Obi is a boy",
+    "us": "Rules the world."
+  }
+];
+const book5 = ["elahsoft", "ladyb", "urchman"];
+const correctIndex = {
+  ada: [1],
+  in: [1],
+  wonderland: [1],
+  going: [1],
+  to: [1],
+  the: [1, 2],
+  moon: [1],
+  obi: [2],
+  is: [2],
+  a: [2],
+  boy: [2],
+  rules: [2],
+  world: [2]
+};
+const wrongIndex = {
+  ada: [1],
+  in: [1],
+  wonderland: [1, 2, 4],
+  going: [1],
+  to: [1],
+  the: [1, 2],
+  moon: [1],
+  obi: [2],
+  is: [2],
+  a: [2],
+  boy: [2],
+  rules: [2],
+  world: [1, 2],
+};
+const wrongAnswer = {
+  ada: [1],
+  in: [1],
+  wonderland: [1, 9, 8, 7],
+  going: [1],
+  to: [1, 5],
+  the: [1, 2],
+  moon: [1, 3],
+  obi: [2],
+  is: [2, 3],
+  a: [1, 2],
+  boy: [2],
+  rules: [2],
+  world: [2]
+};
+const correctArrayOfIndices = [
+  [1],
+  [1],
+  [2],
+  [1],
+  []
+];
 
 /* testSuite 1 */
-describe("Read book data -:", () => {
-  let invertedIndex = new InvertedIndex();
-  let book1 = [{
-      "title": "Alice in Wonderland",
-      "text": "Alice falls into a rabbit hole and enters a world full of imagination."
-    },
-    {
-      "title": "The Lord of the Rings: The Fellowship of the Ring.",
-      "text": "An unusual alliance of man, elf, dwarf, wizard and hobbit seek to destroy a powerful ring."
-    }
-  ];
-  let book2 = [];
-  describe("assert that json file read is not empty -:", () => {
+describe("Read book data", () => {
+  describe("assert that json file read as at the time index is created not empty", () => {
+    invertedIndex.createIndex(book1, 'book1.json');
     it("assert that isEmpty function return false for book1", () => {
-      expect(invertedIndex.isEmpty(book1)).toBeFalsy();
+      expect(invertedIndex.isEmpty(invertedIndex.books)).toBeFalsy();
     });
     it("assert that isEmpty function return true for book2", () => {
       expect(invertedIndex.isEmpty(book2)).toBeTruthy();
+    });
+    invertedIndex.createIndex(book2, 'book2.json');
+    it("assert that index is never generated for empty arrays", () => {
+      expect(invertedIndex.allIndex['book2.json']).toEqual(undefined);
     });
   });
 });
 
 /*testSuite 2 */
-describe("Populate Index -:", () => {
-  let invertedIndex = new InvertedIndex();
-  let book1 = [{
-      "title": "Ada in the Wonderland",
-      "text": "Going to the Moon!"
-    },
-    {
-      "title": "Obi is a boy",
-      "text": "Rules the world."
-    }
-  ];
-  let book2 = [{
-      "echo": "Ada in Wonderland",
-      "me": "Going to the Moon!"
-    },
-    {
-      "you": "Obi is a boy",
-      "us": "Rules the world."
-    }
-  ];
-  let book3 = ["elahsoft", "ladyb", "urchman"];
-  describe("Ensures the file content is actually a valid JSON Array -:", () => {
+describe("Populate Index", () => {
+  describe("Ensures the file content is actually a valid JSON Array", () => {
     it("assert that isValidJsonArray returns true for book1", () => {
-      expect(invertedIndex.isValidJsonArray(book1)).toBeTruthy();
+      expect(invertedIndex.isValidJsonArray(book3)).toBeTruthy();
     });
     it("assert that isValidJsonArray returns false for book2", () => {
-      expect(invertedIndex.isValidJsonArray(book2)).toBeFalsy();
+      expect(invertedIndex.isValidJsonArray(book4)).toBeFalsy();
     });
     it("assert that isValidJsonArray returns false for book3", () => {
-      expect(invertedIndex.isValidJsonArray(book3)).toBeFalsy();
+      expect(invertedIndex.isValidJsonArray(book5)).toBeFalsy();
     });
   });
-  let correctIndex = {
-    ada: [1],
-    in: [1],
-    wonderland: [1],
-    going: [1],
-    to: [1],
-    the: [1, 2],
-    moon: [1],
-    obi: [2],
-    is: [2],
-    a: [2],
-    boy: [2],
-    rules: [2],
-    world: [2]
-  };
-  let wrongIndex = {
-    ada: [1],
-    in: [1],
-    wonderland: [1, 2, 4],
-    going: [1],
-    to: [1],
-    the: [1, 2],
-    moon: [1],
-    obi: [2],
-    is: [2],
-    a: [2],
-    boy: [2],
-    rules: [2],
-    world: [1, 2],
-  };
-  invertedIndex.createIndex(book1);
-  describe("Test that Index is created once JSON file has been read -:", () => {
+  invertedIndex.createIndex(book3, 'book3.json');
+  describe("Test that Index is created once JSON file has been read", () => {
     it("confirm that isIndexCreated function works well by returning true for correctIndex", () => {
       expect(invertedIndex.index).toEqual(correctIndex);
     });
@@ -98,95 +124,45 @@ describe("Populate Index -:", () => {
       expect(invertedIndex.isIndexCreated()).toBeTruthy();
     });
   });
-  describe("Test that the index maps the string keys to the correct objects in the JSON array -:", () => {
-    let correctAnswer = {
-      ada: [1],
-      in: [1],
-      wonderland: [1],
-      going: [1],
-      to: [1],
-      the: [1, 2],
-      moon: [1],
-      obi: [2],
-      is: [2],
-      a: [2],
-      boy: [2],
-      rules: [2],
-      world: [2]
-    };
-    let wrongAnswer = {
-      ada: [1],
-      in: [1],
-      wonderland: [1, 9, 8, 7],
-      going: [1],
-      to: [1, 5],
-      the: [1, 2],
-      moon: [1, 3],
-      obi: [2],
-      is: [2, 3],
-      a: [1, 2],
-      boy: [2],
-      rules: [2],
-      world: [2]
-    };
-    invertedIndex.createIndex(book1);
+  describe("Test that the index maps the string keys to the correct objects in the JSON array", () => {
     describe("Confirm that isMapCorrect function works as expected", () => {
-      it("invertedIndex.index[ada]).toEqual(correctAnswer[ada]", () => {
-        expect(invertedIndex.index['ada']).toEqual(correctAnswer['ada']);
+      it("invertedIndex.index[ada]).toEqual(correctIndex[ada]", () => {
+        expect(invertedIndex.index['ada']).toEqual(correctIndex['ada']);
       });
-      it("invertedIndex.index[world]).toEqual(correctAnswer[world]", () => {
-        expect(invertedIndex.index['world']).toEqual(correctAnswer['world']);
+      it("invertedIndex.index[world]).toEqual(correctIndex[world]", () => {
+        expect(invertedIndex.index['world']).toEqual(correctIndex['world']);
       });
-      it("invertedIndex.index[moon]).toEqual(correctAnswer[moon]", () => {
-        expect(invertedIndex.index['moon']).toEqual(correctAnswer['moon']);
+      it("invertedIndex.index[moon]).toEqual(correctIndex[moon]", () => {
+        expect(invertedIndex.index['moon']).toEqual(correctIndex['moon']);
       });
-
       it("invertedIndex.index['moon'] !== wrongAnswer['moon']", () => {
-        expect(invertedIndex.index['moon'] !== wrongAnswer['moon']).toBeTruthy();
+        expect(invertedIndex.index['moon'] === wrongAnswer['moon']).toBeFalsy();
       });
       it("invertedIndex.index['to'] !== wrongAnswer['to']", () => {
-        expect(invertedIndex.index['to'] !== wrongAnswer['to']).toBeTruthy();
+        expect(invertedIndex.index['to'] === wrongAnswer['to']).toBeFalsy();
       });
       it("invertedIndex.index[a] !== wrongAnswer[a]", () => {
-        expect(invertedIndex.index['a'] !== wrongAnswer['a']).toBeTruthy();
+        expect(invertedIndex.index['a'] === wrongAnswer['a']).toBeFalsy();
       });
     });
-
-
-    describe("Confirm that I can get the index -:", () => {
-      it("assert that invertedIndex.getIndex() === correctAnswer", () => {
-        expect(invertedIndex.getIndex()).toEqual(correctAnswer);
+    describe("Confirm that I can get the index with document id specified", () => {
+      it("assert that invertedIndex.getIndex('book2.json') === invertedIndex.allIndex['book2.json']", () => {
+        expect(invertedIndex.getIndex('book2.json')).toEqual(invertedIndex.allIndex['book2.json']);
       });
     });
-
-    it("assert that the index maps the string keys to the correct objects in the JSON array", () => {
-      expect(invertedIndex.isMapCorrect(correctAnswer)).toBeTruthy();
+    describe("Confirm that I can get the index with document id not specified", () => {
+      it("assert that invertedIndex.getIndex() === invertedIndex.index", () => {
+        expect(invertedIndex.getIndex()).toEqual(invertedIndex.allIndex['book3.json']);
+        expect(invertedIndex.getIndex()).toEqual(invertedIndex.index);
+      });
     });
   });
 });
 
 /* testSuite 3 */
 describe("Search index -:", () => {
-  let invertedIndex = new InvertedIndex();
-  let book = [{
-      "title": "Ada in Wonderland",
-      "text": "Going to the Moon!"
-    },
-    {
-      "title": "Obi is a boy",
-      "text": "Rules the world."
-    }
-  ];
-  let correctArrayOfIndices = [
-    [1],
-    [1],
-    [2],
-    [1],
-    []
-  ];
-  invertedIndex.createIndex(book);
-  let searchResult = invertedIndex.search(book, 'Ada', 'In', ['world', 'Moon'], "hello");
-  describe("Confirm that areAllValidIndex function works well 'Ada', 'In', ['world', 'Moon'], \"hello\" -:", () => {
+  let searchResult = invertedIndex.search('book3.json', 'Ada', 'In', ['world', 'Moon'], "hello");
+  describe("Confirm that search works well for array of array mixed with words", () => {
     it("assert that correctArrayOfIndices[0] === invertedIndex.index['ada']", () => {
       expect(correctArrayOfIndices[0]).toEqual(invertedIndex.index['ada']);
       expect(searchResult[0]).toEqual(invertedIndex.index['ada']);
@@ -208,8 +184,8 @@ describe("Search index -:", () => {
       expect(correctArrayOfIndices[4]).toEqual(searchResult[4]);
     });
   });
-  let searchResult2 = invertedIndex.search(book, 'Ada', 'In', 'world', 'Moon', "hello");
-  describe("Confirm that areAllValidIndex function works well for 'Ada', 'In', 'world', 'Moon', \"hello\" -:", () => {
+  let searchResult2 = invertedIndex.search('book3.json', 'Ada', 'In', 'world', 'Moon', "hello");
+  describe("Confirm that search works well for array of words", () => {
     it("assert that correctArrayOfIndices[0] === invertedIndex.index['ada']", () => {
       expect(correctArrayOfIndices[0]).toEqual(invertedIndex.index['ada']);
       expect(searchResult2[0]).toEqual(invertedIndex.index['ada']);
@@ -231,7 +207,28 @@ describe("Search index -:", () => {
       expect(correctArrayOfIndices[4]).toEqual(searchResult[4]);
     });
   });
-  it("assert that search returns an array of indices of the correct objects that contain the words in the search query - File Name not specified", () => {
-    expect(invertedIndex.areAllValidIndex(searchResult, correctArrayOfIndices)).toBeTruthy();
+
+  let searchResult3 = invertedIndex.search('Ada', 'In', 'world', 'Moon', "hello");
+  describe("Confirm that search works when fileName is undefined", () => {
+    it("assert that correctArrayOfIndices[0] === invertedIndex.index['ada']", () => {
+      expect(correctArrayOfIndices[0]).toEqual(invertedIndex.index['ada']);
+      expect(searchResult3[0]).toEqual(invertedIndex.index['ada']);
+    });
+    it("assert that correctArrayOfIndices[1] === invertedIndex.index['in']", () => {
+      expect(correctArrayOfIndices[1]).toEqual(invertedIndex.index['in']);
+      expect(searchResult3[1]).toEqual(invertedIndex.index['in']);
+    });
+    it("assert that correctArrayOfIndices[2] === invertedIndex.index['world']", () => {
+      expect(correctArrayOfIndices[2]).toEqual(invertedIndex.index['world']);
+      expect(searchResult3[2]).toEqual(invertedIndex.index['world']);
+    });
+    it("assert that correctArrayOfIndices[3] === invertedIndex.index['moon']", () => {
+      expect(correctArrayOfIndices[3]).toEqual(invertedIndex.index['moon']);
+      expect(searchResult3[3]).toEqual(invertedIndex.index['moon']);
+    });
+    it("assert that correctArrayOfIndices[4] === searchResult['hello']", () => {
+      expect(searchResult3[4]).toEqual([]);
+      expect(correctArrayOfIndices[4]).toEqual(searchResult3[4]);
+    });
   });
 });

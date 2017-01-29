@@ -2,15 +2,14 @@
  * inverted index class
  * @class {InvertedIndex}
  */
-
 class InvertedIndex {
+
   /**
    * Create an inverted index.
    * @constructor
-   * @param {null} takes no parameter
-   * @return {null} returns nothing
    */
   constructor() {
+    this.allIndex = {};
     this.books = [];
     this.index = {};
     this.searchWord = [];
@@ -23,15 +22,16 @@ class InvertedIndex {
    * It Creates the index for the documents
    * in the file object
    * @param {array} FileObject
-   * @return {null} returns nothing
+   * @param {String} fileName
+   * @returns {void} returns nothing
    */
-  createIndex(FileObject) {
+  createIndex(FileObject, fileName) {
     const isEmptyStatus = this.isEmpty(FileObject);
     if (!isEmptyStatus) {
       const isValidJsonArrayStatus = this.isValidJsonArray(FileObject);
       if (isValidJsonArrayStatus) {
         this.books = FileObject;
-        this.generateIndex();
+        this.generateIndex(fileName);
       }
     }
   }
@@ -41,7 +41,7 @@ class InvertedIndex {
    * It Checks that the books
    * instance variable is not empty
    * @param {array} FileObject accepts an array 
-   * @return {boolean} value showing if books is empty or not
+   * @returns {boolean} value showing if books is empty or not
    */
   isEmpty(FileObject) {
     let status = true;
@@ -55,10 +55,12 @@ class InvertedIndex {
    * generate index.
    * It generates the index 
    * for the uploaded file
-   * @param {null} takes no parameter
-   * @return {null} returns no value
+   * @param {string} fileName takes the filename
+   * of the uploaded file index is to be 
+   * generated.
+   * @returns {void} returns no value
    */
-  generateIndex() {
+  generateIndex(fileName) {
     let IndexTemp = {};
     let title = [];
     let text = [];
@@ -70,6 +72,7 @@ class InvertedIndex {
       IndexTemp = this.process(text, IndexTemp, i);
     }
     this.index = IndexTemp;
+    this.allIndex[fileName] = this.index;
   }
 
   /**
@@ -79,18 +82,16 @@ class InvertedIndex {
    * @param {array} textOrTitle takes an array of strings
    * @param {object} IndexTemp takes a js object
    * @param {number} counter takes a number indicating the document being considered
-   * @return {object} returns no value
+   * @returns {object} returns no value
    */
   process(textOrTitle, IndexTemp, counter) {
     for (let j = 0; j < textOrTitle.length; j++) {
       textOrTitle[j] = textOrTitle[j].toLowerCase();
+      if (IndexTemp[textOrTitle[j]] === undefined) {
+        IndexTemp[textOrTitle[j]] = [];
+      }
       if (IndexTemp[textOrTitle[j]] !== undefined &&
-        IndexTemp[textOrTitle[j]].includes(counter + 1)) {
-        continue;
-      } else {
-        if (IndexTemp[textOrTitle[j]] === undefined) {
-          IndexTemp[textOrTitle[j]] = [];
-        }
+        !IndexTemp[textOrTitle[j]].includes(counter + 1)) {
         IndexTemp[textOrTitle[j]].push(counter + 1);
         if (IndexTemp[textOrTitle[j]].length > this.mostFrequency) {
           this.mostFrequency = IndexTemp[textOrTitle[j]].length;
@@ -105,46 +106,40 @@ class InvertedIndex {
    * It returns the index for a 
    * selected document in the uploaded
    * file
-   * @param {string} DocumentKey in the uploaded file to return its index
-   * @return {object} the index for the associated DocumentKey
+   * @param {string} documentKey in the uploaded file to return its index
+   * @returns {object} the index for the associated documentKey
    */
-  getIndex(DocumentKey) {
-    if (DocumentKey !== undefined) {
-      this.books = [].push(this.books[DocumentKey]);
-      this.generateIndex();
-    }
-    return this.index;
+  getIndex(documentKey) {
+    let index = {};
+    index = documentKey === undefined ? this.index : this.allIndex[documentKey];
+    return index;
   }
 
   /**
    * search
    * Search an already generated index
    * or a file for keywords
-   * @param {string} filename - The file to perform search on.
+   * @param {string} fileName - The file to perform search on.
    * @param {array} terms - The terms value.
-   * @return {array} The searchOutput value.
+   * @returns {array} The searchOutput value.
    */
-  search(filename, ...terms) {
+  search(fileName, ...terms) {
     const searchResult = [];
     const termWord = [];
-    if (filename !== undefined && terms.length > 0) {
-      this.createIndex(filename);
+    if (typeof (fileName) === typeof ('') && fileName.endsWith('.json')) {
+      this.index = this.allIndex[fileName];
     } else {
-      terms = filename;
+      terms.unshift(fileName);
     }
     let term = ' ';
-    if (typeof (terms) === typeof ([])) {
-      for (let i = 0; i < terms.length; i++) {
-        if (typeof (terms[i]) === typeof ([])) {
-          for (let j = 0; j < terms[i].length; j++) {
-            term = `${term} ${terms[i][j]}`;
-          }
-        } else {
-          term = `${term} ${terms[i]}`;
+    for (let i = 0; i < terms.length; i++) {
+      if (typeof (terms[i]) === typeof ([])) {
+        for (let j = 0; j < terms[i].length; j++) {
+          term = `${term} ${terms[i][j]}`;
         }
+      } else {
+        term = `${term} ${terms[i]}`;
       }
-    } else {
-      term = terms;
     }
     term = this.removePunctuation(term).split(' ');
     for (let i = 0; i < term.length; i++) {
@@ -165,55 +160,12 @@ class InvertedIndex {
    * is index created
    * Check if index was created
    * @param {boolean} The true/false value.
-   * @return {null} returns nothing
+   * @returns {boolean} returns nothing
    */
   isIndexCreated() {
     let status = false;
-    if (this.index !== {}) {
+    if (this.getObjectSize(this.index) > 0) {
       status = true;
-    }
-    return status;
-  }
-
-  /**
-   * is map correct
-   * Verify that each word is mapped to
-   * the correct document
-   * @param {array} rightMap - The rightMap value.
-   * @return {boolean} The status value.
-   */
-  isMapCorrect(rightMap) {
-    let status = false;
-    for (let i = 0; i < this.getObjectSize(rightMap); i++) {
-      if (rightMap[i] === this.index[i]) {
-        status = true;
-      } else {
-        status = false;
-        break;
-      }
-    }
-    return status;
-  }
-
-  /**
-   * are all valid index
-   * Check that index generated from search is correct.
-   * @param {array} searchResult - The searchResult value.
-   * @param {array} correctArrayOfIndices - The right array of indices that search should 
-   * return
-   * @return {boolean} The status value.
-   */
-  areAllValidIndex(searchResult, correctArrayOfIndices) {
-    let status = false;
-    for (let i = 0; i < correctArrayOfIndices.length; i++) {
-      for (let j = 0; j < correctArrayOfIndices.length; j++) {
-        if (searchResult[i][j] === correctArrayOfIndices[i][j]) {
-          status = true;
-        } else {
-          status = false;
-          break;
-        }
-      }
     }
     return status;
   }
@@ -222,7 +174,7 @@ class InvertedIndex {
    * get object size
    * Get the size of an object.
    * @param {object} object - The object value.
-   * @return {number} The object size value.
+   * @returns {number} The object size value.
    */
   getObjectSize(object) {
     return Object.keys(object).length;
@@ -232,21 +184,11 @@ class InvertedIndex {
    * remove punctuation
    * Removes punctuation marks.
    * @param {string} sentence - The sentence value.
-   * @return {string} The sentence value.
+   * @returns {string} The sentence value.
    */
   removePunctuation(sentence) {
     sentence = sentence.match(/[^_\W]+/g).join(' ');
     return sentence;
-  }
-
-  /**
-   * set books
-   * Set the book instance variable
-   * @param {array} book - The book value.
-   *@returns {null} returns nothing.
-   */
-  setBooks(book) {
-    this.books = book;
   }
 
   /**
@@ -266,5 +208,4 @@ class InvertedIndex {
     }
     return status;
   }
-
 }

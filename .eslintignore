@@ -1,3 +1,5 @@
 search string
 /lib
 /dist
+gulpfile.babel.js
+app.js

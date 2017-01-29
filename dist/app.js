@@ -14,10 +14,9 @@ const nameSpace = angular.module('InvertedIndex', ['ngSanitize', 'angularModalSe
  * app front end when the scope variables
  * changes based on events
  * @param {String, array} The name of controller and an  array of global variables/callback function
- * @returns {null} Returns nothing
+ * @returns {void} Returns nothing
  */
 nameSpace.controller('InvertedIndexController', ['$scope', '$sce', 'ModalService', ($scope, $sce, ModalService) => {
-  $scope.allFiles = {};
   $scope.file_names = [];
   $scope.invertedIndex = new InvertedIndex();
   $scope.index = null;
@@ -40,12 +39,12 @@ nameSpace.controller('InvertedIndexController', ['$scope', '$sce', 'ModalService
    * @description
    * This function calls functions that read
    * the selected file 
+   * @returns {void}
    */
-  $scope.upload = (file) => {
-    if (file === undefined) {
-      $scope.progress = document.querySelector('.percent');
-      $scope.handleFileSelect();
-    }
+  $scope.upload = () => {
+    $scope.progress = document.querySelector('.percent');
+    $scope.handleFileSelect();
+
   };
 
   /**
@@ -54,6 +53,7 @@ nameSpace.controller('InvertedIndexController', ['$scope', '$sce', 'ModalService
    * @methodOf InvertedIndex.InvertedIndexController:InvertedIndexController
    * @description
    * This function aborts the file reading
+   * @returns {void}
    */
   $scope.abortRead = () => {
     reader.abort;
@@ -65,6 +65,7 @@ nameSpace.controller('InvertedIndexController', ['$scope', '$sce', 'ModalService
    * @methodOf InvertedIndex.InvertedIndexController:InvertedIndexController
    * @description
    * This function updates the UI progress bar
+   * @returns {void}
    */
   $scope.updateProgress = (evt) => {
     // evt is an ProgressEvent.
@@ -84,9 +85,10 @@ nameSpace.controller('InvertedIndexController', ['$scope', '$sce', 'ModalService
    * @description This function reads the selected file,
    * resets progress bar on new file selection,
    * calls function to prepare generated index for viewing
+   * @returns {void}
    */
-  $scope.handleFileSelect = (evt) => {
-    let fileArray = document.getElementById('files').files;
+  $scope.handleFileSelect = (e) => {
+    const fileArray = document.getElementById('files').files;
     for (let i = 0; i < fileArray.length; i++) {
       $scope.progress.style.width = '0%';
       $scope.progress.textContent = '0%';
@@ -99,17 +101,15 @@ nameSpace.controller('InvertedIndexController', ['$scope', '$sce', 'ModalService
         document.getElementById('progress_bar').className = 'loading';
       };
       reader.onload = e => {
-        let content = e.target.result;
+        const content = e.target.result;
         $scope.$apply(() => {
           $scope.content = content;
           if ($scope.file_names.indexOf(fileArray[i].name) === -1) {
-            console.log($scope.content);
             if ($scope.content) {
               $scope.file_object = JSON.parse(content);
               if ($scope.invertedIndex.isValidJsonArray($scope.file_object)) {
-                $scope.invertedIndex.createIndex($scope.file_object);
+                $scope.invertedIndex.createIndex($scope.file_object, fileArray[i].name);
                 $scope.files = fileArray[i];
-                $scope.allFiles[$scope.files.name] = $scope.file_object;
                 $scope.file_names.push($scope.files.name);
                 $scope.allContents[$scope.files.name] = $scope.content;
                 $scope.trusted_html_content = $sce.trustAsHtml(`<p><code>${$scope.content}</code></p>`);
@@ -146,8 +146,7 @@ nameSpace.controller('InvertedIndexController', ['$scope', '$sce', 'ModalService
    * calls function to prepare generated index for viewing
    */
   $scope.file_selected = (file) => {
-    $scope.invertedIndex.createIndex($scope.allFiles[file]);
-    $scope.index = $scope.invertedIndex.index;
+    $scope.index = $scope.invertedIndex.allIndex[file];
     $scope.prepareIndexViewComponents(file);
   };
 
@@ -160,9 +159,9 @@ nameSpace.controller('InvertedIndexController', ['$scope', '$sce', 'ModalService
    * the human readable form
    */
   $scope.prepareIndexViewComponents = (file) => {
-    $scope.terms = ["Terms"];
+    $scope.terms = ['Terms'];
     $scope.index_display = [];
-    let mostFrequencyKey = "";
+    let mostFrequencyKey = '';
     if (file !== undefined) {
       mostFrequencyKey = file;
       $scope.trusted_html_content = $sce.trustAsHtml(`<p><code>${$scope.allContents[file]}</code></p>`);
@@ -170,26 +169,26 @@ nameSpace.controller('InvertedIndexController', ['$scope', '$sce', 'ModalService
       mostFrequencyKey = $scope.files.name;
       $scope.trusted_html_content = $sce.trustAsHtml(`<p><code>${$scope.allContents[$scope.files.name]}</code></p>`);
     }
-    for (var i = 0; i < $scope.allMostFrequency[mostFrequencyKey]; i++) {
+    for (let i = 0; i < $scope.allMostFrequency[mostFrequencyKey]; i++) {
       $scope.terms.push(`doc${i + 1}`);
     }
     if ($scope.index !== undefined) {
       $scope.words = Object.keys($scope.index).sort();
     }
-    let index_object_size = $scope.invertedIndex.getObjectSize($scope.index);
-    for (let i = 0; i < index_object_size; i++) {
-      let index_display_temp = [$scope.words[i]];
+    const indexObjectSize = $scope.invertedIndex.getObjectSize($scope.index);
+    for (let i = 0; i < indexObjectSize; i++) {
+      const indexDisplayTemp = [$scope.words[i]];
       let k = 0;
       for (let j = 0; j < $scope.allMostFrequency[mostFrequencyKey]; j++) {
-        let doc_id = j + 1;
-        if (doc_id == $scope.index[$scope.words[i]][k]) {
-          index_display_temp.push("X");
-          k = k + 1;
+        let docId = j + 1;
+        if (docId === $scope.index[$scope.words[i]][k]) {
+          indexDisplayTemp.push('X');
+          k += 1;
         } else {
-          index_display_temp.push(" ");
+          indexDisplayTemp.push(' ');
         }
       }
-      $scope.index_display[i] = index_display_temp;
+      $scope.index_display[i] = indexDisplayTemp;
     }
   };
 
@@ -207,10 +206,12 @@ nameSpace.controller('InvertedIndexController', ['$scope', '$sce', 'ModalService
     $scope.setSelectedValues();
     $scope.index_search_display = [];
     for (let i = 0; i < $scope.selected_file.length; i++) {
-      let search_result = $scope.invertedIndex.search($scope.allFiles[$scope.selected_file[i]], $scope.search_strings);
-      let search_words_array = $scope.invertedIndex.removePunctuation($scope.search_strings).split(" ");
-      let search_in_view = $scope.prepareSearchIndexViewComponents(search_words_array, search_result, i);
-      $scope.index_search_display[i] = search_in_view;
+      const searchResult = $scope.invertedIndex.search($scope.selected_file[i],
+        $scope.search_strings);
+      const searchWordsArray = $scope.invertedIndex.removePunctuation($scope.search_strings).split(' ');
+      const searchInView = $scope.prepareSearchIndexViewComponents(searchWordsArray,
+        searchResult, i);
+      $scope.index_search_display[i] = searchInView;
     }
     $scope.index = $scope.invertedIndex.index;
   };
@@ -222,35 +223,35 @@ nameSpace.controller('InvertedIndexController', ['$scope', '$sce', 'ModalService
    * @description
    * This function searches prepares the search result into a human readble form
    */
-  $scope.prepareSearchIndexViewComponents = (search_words_array, search_result, counter) => {
-    $scope.search_terms = ["Terms"];
+  $scope.prepareSearchIndexViewComponents = (searchWordsArray, searchResult, counter) => {
+    $scope.search_terms = ['Terms'];
     $scope.trusted_html_content = $sce.trustAsHtml(`<p><code>${$scope.allContents[$scope.selected_file[counter]]}</code></p>`);
-    for (var i = 0; i < $scope.allMostFrequency[$scope.selected_file[counter]]; i++) {
+    for (let i = 0; i < $scope.allMostFrequency[$scope.selected_file[counter]]; i++) {
       $scope.search_terms.push(`doc${i + 1}`);
     }
-    let index_search_display_temp = [$scope.search_terms];
-    let index_search_display_item = [];
-    let size = search_result.length;
+    const indexSearchDisplayTemp = [$scope.search_terms];
+    let indexSearchDisplayItem = [];
+    const size = searchResult.length;
     for (let i = 0; i < size; i++) {
       let found = false;
-      index_search_display_item.push(search_words_array[i]);
+      indexSearchDisplayItem.push(searchWordsArray[i]);
       let k = 0;
       for (let j = 0; j < $scope.allMostFrequency[$scope.selected_file[counter]]; j++) {
-        let doc_id = j + 1;
-        if (doc_id == search_result[i][k]) {
+        const docId = j + 1;
+        if (docId === searchResult[i][k]) {
           found = true;
-          index_search_display_item.push("X");
+          indexSearchDisplayItem.push('X');
           k = k + 1;
         } else {
-          index_search_display_item.push(" ");
+          indexSearchDisplayItem.push(' ');
         }
       }
       if (found) {
-        index_search_display_temp.push(index_search_display_item);
+        indexSearchDisplayTemp.push(indexSearchDisplayItem);
       }
-      index_search_display_item = [];
+      indexSearchDisplayItem = [];
     }
-    return index_search_display_temp;
+    return indexSearchDisplayTemp;
   };
 
   /**
@@ -264,10 +265,10 @@ nameSpace.controller('InvertedIndexController', ['$scope', '$sce', 'ModalService
    * perform the search on
    */
   $scope.setSelectedValues = () => {
-    let x = document.getElementById("selected_file");
-    for (let i = 0; i < x.options.length; i++) {
-      if (x.options[i].selected == true) {
-        $scope.selected_file.push(x.options[i].text);
+    const filesSelected = document.getElementById('selected_file');
+    for (let i = 0; i < filesSelected.options.length; i++) {
+      if (filesSelected.options[i].selected === true) {
+        $scope.selected_file.push(filesSelected.options[i].text);
       }
     }
   };
@@ -281,31 +282,27 @@ nameSpace.controller('InvertedIndexController', ['$scope', '$sce', 'ModalService
    * show all error modal depending the $scope
    * error code set
    */
-  $scope.showErrorModal = function () {
+  $scope.showErrorModal = () => {
     if ($scope.notValidJSONFile) {
-      $scope.error_message = "Invalid File Content ";
+      $scope.error_message = 'Invalid File Content';
+    } else if ($scope.isEmptyFile) {
+      $scope.error_message = 'JSON File is empty';
+    } else {
+      $scope.error_message = 'File(s) has already been uploaded!';
     }
-    else if ($scope.isEmptyFile) {
-      $scope.error_message = "JSON File is empty ";
-    }
-    else{
-      $scope.error_message = "File(s) has already been uploaded!";
-    }
-    $scope.title = "Fatal Error";
+    $scope.title = 'Fatal Error';
     ModalService.showModal({
-      templateUrl: "error_modal.html",
-      controller: "ErrorModalController",
+      templateUrl: 'error_modal.html',
+      controller: 'ErrorModalController',
       scope: $scope
-    }).then(function (modal) {
+    }).then((modal) => {
       modal.element.modal();
-      modal.close.then(function (result) {
+      modal.close.then((result) => {
         if ($scope.notValidJSONFile) {
           $scope.notValidJSONFile = false;
-        }
-        else if ($scope.isEmptyFile) {
+        } else if ($scope.isEmptyFile) {
           $scope.isEmptyFile = false;
-        }
-        else{
+        } else {
           $scope.fileALreadyUploaded = false;
         }
       });
@@ -325,14 +322,14 @@ nameSpace.controller('InvertedIndexController', ['$scope', '$sce', 'ModalService
  * @returns {null} Returns nothing
  */
 nameSpace.controller('ErrorModalController', ['$scope', '$element', 'close', ($scope, $element, close) => {
-  $scope.dismissModal = function (result) {
+  $scope.dismissModal = (result) => {
     close(result, 200); // close, but give 200ms for bootstrap to animate
   };
-}]).directive('removeModal', ['$document', function ($document) {
+}]).directive('removeModal', ['$document', ($document) => {
   return {
     restrict: 'A',
-    link: function (scope, element, attrs) {
-      element.bind('click', function () {
+    link: (scope, element) => {
+      element.bind('click', () => {
         $document[0].body.classList.remove('modal-open');
         angular.element($document[0].getElementsByClassName('modal-backdrop')).remove();
         angular.element($document[0].getElementsByClassName('modal')).remove();
