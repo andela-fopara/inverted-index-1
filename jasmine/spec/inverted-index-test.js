@@ -114,14 +114,11 @@ describe("Populate Index", () => {
   });
   invertedIndex.createIndex(book3, 'book3.json');
   describe("Test that Index is created once JSON file has been read", () => {
-    it("confirm that isIndexCreated function works well by returning true for correctIndex", () => {
+    it("assert that index is populated each time json file is read", () => {
       expect(invertedIndex.index).toEqual(correctIndex);
     });
-    it("confirm that isIndexCreated function works well by returning false for wrongIndex", () => {
-      expect(Object.keys(invertedIndex.index).length).toBeGreaterThan(0);
-    });
     it("assert that index is populated each time json file is read", () => {
-      expect(invertedIndex.isIndexCreated()).toBeTruthy();
+      expect(Object.keys(invertedIndex.index).length).toBeGreaterThan(0);
     });
   });
   describe("Test that the index maps the string keys to the correct objects in the JSON array", () => {

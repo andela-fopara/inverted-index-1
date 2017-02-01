@@ -110,9 +110,7 @@ class InvertedIndex {
    * @returns {object} the index for the associated documentKey
    */
   getIndex(documentKey) {
-    let index = {};
-    index = documentKey === undefined ? this.index : this.allIndex[documentKey];
-    return index;
+    return documentKey ? this.allIndex[documentKey] : this.index;
   }
 
   /**
@@ -159,7 +157,6 @@ class InvertedIndex {
   /**
    * is index created
    * Check if index was created
-   * @param {boolean} The true/false value.
    * @returns {boolean} returns nothing
    */
   isIndexCreated() {

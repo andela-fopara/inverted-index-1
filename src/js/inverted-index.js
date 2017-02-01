@@ -77,11 +77,14 @@ class InvertedIndex {
 
   /**
    * process.
+   * 
    * It processes the passed text to index it
    * following the object array read
+   * 
    * @param {array} textOrTitle takes an array of strings
    * @param {object} IndexTemp takes a js object
-   * @param {number} counter takes a number indicating the document being considered
+   * @param {number} counter takes a number 
+   * indicating the document being considered
    * @returns {object} returns no value
    */
   process(textOrTitle, IndexTemp, counter) {
@@ -103,22 +106,24 @@ class InvertedIndex {
 
   /**
    * gets the index.
+   * 
    * It returns the index for a 
    * selected document in the uploaded
    * file
+   * 
    * @param {string} documentKey in the uploaded file to return its index
    * @returns {object} the index for the associated documentKey
    */
   getIndex(documentKey) {
-    let index = {};
-    index = documentKey === undefined ? this.index : this.allIndex[documentKey];
-    return index;
+    return documentKey ? this.allIndex[documentKey] : this.index;
   }
 
   /**
    * search
+   * 
    * Search an already generated index
    * or a file for keywords
+   * 
    * @param {string} fileName - The file to perform search on.
    * @param {array} terms - The terms value.
    * @returns {array} The searchOutput value.
@@ -126,14 +131,14 @@ class InvertedIndex {
   search(fileName, ...terms) {
     const searchResult = [];
     const termWord = [];
-    if (typeof (fileName) === typeof ('') && fileName.endsWith('.json')) {
+    if (typeof (fileName) === 'string' && fileName.endsWith('.json')) {
       this.index = this.allIndex[fileName];
     } else {
       terms.unshift(fileName);
     }
     let term = ' ';
     for (let i = 0; i < terms.length; i++) {
-      if (typeof (terms[i]) === typeof ([])) {
+      if (Array.isArray(terms[i])) {
         for (let j = 0; j < terms[i].length; j++) {
           term = `${term} ${terms[i][j]}`;
         }
@@ -141,9 +146,9 @@ class InvertedIndex {
         term = `${term} ${terms[i]}`;
       }
     }
-    term = this.removePunctuation(term).split(' ');
-    for (let i = 0; i < term.length; i++) {
-      const key = term[i].toLowerCase();
+    const termArray = this.removePunctuation(term).split(' ');
+    for (let i = 0; i < termArray.length; i++) {
+      const key = termArray[i].toLowerCase();
       if (this.index[key]) {
         searchResult.push(this.index[key]);
       } else {
@@ -157,21 +162,10 @@ class InvertedIndex {
   }
 
   /**
-   * is index created
-   * Check if index was created
-   * @returns {boolean} returns nothing
-   */
-  isIndexCreated() {
-    let status = false;
-    if (this.getObjectSize(this.index) > 0) {
-      status = true;
-    }
-    return status;
-  }
-
-  /**
    * get object size
+   * 
    * Get the size of an object.
+   * 
    * @param {object} object - The object value.
    * @returns {number} The object size value.
    */
@@ -181,7 +175,9 @@ class InvertedIndex {
 
   /**
    * remove punctuation
+   * 
    * Removes punctuation marks.
+   * 
    * @param {string} sentence - The sentence value.
    * @returns {string} The sentence value.
    */
@@ -192,15 +188,18 @@ class InvertedIndex {
 
   /**
    * is valid json array
+   * 
    * checks that the file read contains a valid json array
+   * 
    * @param {array} fileContent An array of objects
    * @returns {boolean} status indicating validity.
    */
   isValidJsonArray(fileContent) {
     let status = false;
-    if (typeof (fileContent) === typeof ([])) {
+    if (Array.isArray(fileContent)) {
       for (let i = 0; i < fileContent.length; i++) {
-        if (typeof (fileContent[i]) === typeof ({}) && fileContent[i]['title'] && fileContent[i]['text']) {
+        if (typeof (fileContent[i]) === 'object' && 
+        fileContent[i]['title'] && fileContent[i]['text']) {
           status = true;
         }
       }
