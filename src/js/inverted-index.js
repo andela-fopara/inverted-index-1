@@ -19,8 +19,10 @@ class InvertedIndex {
 
   /**
    * Create an Index.
+   * 
    * It Creates the index for the documents
    * in the file object
+   * 
    * @param {array} FileObject
    * @param {String} fileName
    * @returns {void} returns nothing
@@ -38,8 +40,10 @@ class InvertedIndex {
 
   /**
    * is empty.
+   * 
    * It Checks that the books
    * instance variable is not empty
+   * 
    * @param {array} FileObject accepts an array 
    * @returns {boolean} value showing if books is empty or not
    */
@@ -53,8 +57,10 @@ class InvertedIndex {
 
   /**
    * generate index.
+   * 
    * It generates the index 
    * for the uploaded file
+   * 
    * @param {string} fileName takes the filename
    * of the uploaded file index is to be 
    * generated.
