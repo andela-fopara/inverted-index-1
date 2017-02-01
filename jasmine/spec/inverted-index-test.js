@@ -120,6 +120,10 @@ describe("Populate Index", () => {
     it("assert that index is populated each time json file is read", () => {
       expect(Object.keys(invertedIndex.index).length).toBeGreaterThan(0);
     });
+    it("assert that getObjectSize works properly", () => {
+      expect(Object.keys(invertedIndex.index).length).
+      toBe(invertedIndex.getObjectSize(invertedIndex.index));
+    });
   });
   describe("Test that the index maps the string keys to the correct objects in the JSON array", () => {
     describe("Confirm that isMapCorrect function works as expected", () => {
