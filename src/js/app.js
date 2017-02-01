@@ -44,7 +44,6 @@ nameSpace.controller('InvertedIndexController', ['$scope', '$sce', 'ModalService
   $scope.upload = () => {
     $scope.progress = document.querySelector('.percent');
     $scope.handleFileSelect();
-
   };
 
   /**
@@ -65,6 +64,7 @@ nameSpace.controller('InvertedIndexController', ['$scope', '$sce', 'ModalService
    * @methodOf InvertedIndex.InvertedIndexController:InvertedIndexController
    * @description
    * This function updates the UI progress bar
+   * @param {evt} The triggered event object
    * @returns {void}
    */
   $scope.updateProgress = (evt) => {
@@ -85,23 +85,24 @@ nameSpace.controller('InvertedIndexController', ['$scope', '$sce', 'ModalService
    * @description This function reads the selected file,
    * resets progress bar on new file selection,
    * calls function to prepare generated index for viewing
+   * @param {evt} The triggered event object
    * @returns {void}
    */
-  $scope.handleFileSelect = (e) => {
+  $scope.handleFileSelect = (evt) => {
     const fileArray = document.getElementById('files').files;
     for (let i = 0; i < fileArray.length; i++) {
       $scope.progress.style.width = '0%';
       $scope.progress.textContent = '0%';
       reader = new FileReader();
-      reader.onabort = e => {
+      reader.onabort = evt => {
         $scope.readerAborted = true;
         $scope.showErrorModal();
       };
-      reader.onloadstart = e => {
+      reader.onloadstart = evt => {
         document.getElementById('progress_bar').className = 'loading';
       };
-      reader.onload = e => {
-        const content = e.target.result;
+      reader.onload = evt => {
+        const content = evt.target.result;
         $scope.$apply(() => {
           $scope.content = content;
           if ($scope.file_names.indexOf(fileArray[i].name) === -1) {
