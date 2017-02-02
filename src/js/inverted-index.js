@@ -204,7 +204,7 @@ class InvertedIndex {
     let status = false;
     if (Array.isArray(fileContent)) {
       for (let i = 0; i < fileContent.length; i++) {
-        if (typeof (fileContent[i]) === 'object' && 
+        if (typeof (fileContent[i]) === typeof ({}) && 
         fileContent[i]['title'] && fileContent[i]['text']) {
           status = true;
         }

@@ -1,4 +1,3 @@
-
 const nameSpace = angular.module('InvertedIndex', ['ngSanitize', 'angularModalService']);
 
 nameSpace.controller('InvertedIndexController', ['$scope', '$sce', 'ModalService', ($scope, $sce, ModalService) => {
@@ -36,26 +35,32 @@ nameSpace.controller('InvertedIndexController', ['$scope', '$sce', 'ModalService
     }
   };
 
-  $scope.handleFileSelect = (evt) => {
+  $scope.handleFileSelect = () => {
     const fileArray = document.getElementById('files').files;
     for (let i = 0; i < fileArray.length; i++) {
       $scope.progress.style.width = '0%';
       $scope.progress.textContent = '0%';
       reader = new FileReader();
-      reader.onabort = evt => {
+      reader.onabort = () => {
         $scope.readerAborted = true;
+        $scope.abortRead();
         $scope.showErrorModal();
       };
-      reader.onloadstart = evt => {
+      reader.onloadstart = () => {
         document.getElementById('progress_bar').className = 'loading';
       };
-      reader.onload = evt => {
+      reader.onload = (evt) => {
         const content = evt.target.result;
         $scope.$apply(() => {
           $scope.content = content;
           if ($scope.file_names.indexOf(fileArray[i].name) === -1) {
             if ($scope.content) {
-              $scope.file_object = JSON.parse(content);
+              try {
+                $scope.file_object = JSON.parse(content);
+              } catch (exception) {
+                $scope.notValidJSONFile = true;
+                $scope.showErrorModal();
+              }
               if ($scope.invertedIndex.isValidJsonArray($scope.file_object)) {
                 $scope.invertedIndex.createIndex($scope.file_object, fileArray[i].name);
                 $scope.files = fileArray[i];
@@ -79,7 +84,6 @@ nameSpace.controller('InvertedIndexController', ['$scope', '$sce', 'ModalService
             $scope.showErrorModal();
           }
         });
-        setTimeout("document.getElementById('progress_bar').className='';", 2000);
       };
       reader.readAsText(fileArray[i]);
     }
@@ -112,7 +116,7 @@ nameSpace.controller('InvertedIndexController', ['$scope', '$sce', 'ModalService
       const indexDisplayTemp = [$scope.words[i]];
       let k = 0;
       for (let j = 0; j < $scope.allMostFrequency[mostFrequencyKey]; j++) {
-        let docId = j + 1;
+        const docId = j + 1;
         if (docId === $scope.index[$scope.words[i]][k]) {
           indexDisplayTemp.push('X');
           k += 1;
@@ -157,7 +161,7 @@ nameSpace.controller('InvertedIndexController', ['$scope', '$sce', 'ModalService
         if (docId === searchResult[i][k]) {
           found = true;
           indexSearchDisplayItem.push('X');
-          k = k + 1;
+          k = +1;
         } else {
           indexSearchDisplayItem.push(' ');
         }
@@ -184,6 +188,8 @@ nameSpace.controller('InvertedIndexController', ['$scope', '$sce', 'ModalService
       $scope.error_message = 'Invalid File Content';
     } else if ($scope.isEmptyFile) {
       $scope.error_message = 'JSON File is empty';
+    } else if ($scope.readerAborted) {
+      $scope.error_message = 'File Reading was unsuccessful!';
     } else {
       $scope.error_message = 'File(s) has already been uploaded!';
     }

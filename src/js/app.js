@@ -43,6 +43,7 @@ nameSpace.controller('InvertedIndexController', ['$scope', '$sce', 'ModalService
       reader = new FileReader();
       reader.onabort = () => {
         $scope.readerAborted = true;
+        $scope.abortRead();
         $scope.showErrorModal();
       };
       reader.onloadstart = () => {
@@ -54,7 +55,12 @@ nameSpace.controller('InvertedIndexController', ['$scope', '$sce', 'ModalService
           $scope.content = content;
           if ($scope.file_names.indexOf(fileArray[i].name) === -1) {
             if ($scope.content) {
-              $scope.file_object = JSON.parse(content);
+              try {
+                $scope.file_object = JSON.parse(content);
+              } catch (exception) {
+                $scope.notValidJSONFile = true;
+                $scope.showErrorModal();
+              }
               if ($scope.invertedIndex.isValidJsonArray($scope.file_object)) {
                 $scope.invertedIndex.createIndex($scope.file_object, fileArray[i].name);
                 $scope.files = fileArray[i];
