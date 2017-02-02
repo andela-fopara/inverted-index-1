@@ -4,5 +4,20 @@ app.js
 node_modules
 coverage
 src/js/lib
+src/css
 jasmine/lib
 karma.conf.js
+README.md
+LICENSE
+books2.json
+books3.json
+package.json
+search string
+jasmine/MIT.LICENSE
+jasmine/SpecRunner.html
+src/books.json
+src/error_modal.html
+src/index.html
+src/images
+jasmine/spec/books.json
+
