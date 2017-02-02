@@ -1,6 +1,6 @@
 /dist
 gulpfile.babel.js
-app.js
+src/js/app.js
 node_modules
 coverage
 src/js/lib
