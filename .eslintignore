@@ -11,6 +11,7 @@ README.md
 LICENSE
 books2.json
 books3.json
+books1.json
 package.json
 search string
 jasmine/MIT.LICENSE
@@ -20,7 +21,11 @@ src/error_modal.html
 src/index.html
 src/images
 jasmine/spec/books.json
-empty.json
+books6.json
+books5.json
+books4.json
+correctArrayOfIndices.json
+correctIndex.json
+wrongAnswer.json
 feedback.md
-invalid.json
 

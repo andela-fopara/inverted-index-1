@@ -1,8 +1,8 @@
 /* index header styles */
 
-.index_header{
+.index_header {
 	color: blue;
-	margin-top:50px;
+	margin-top: 50px;
 	text-decoration: capitalize;
 }
 
@@ -11,43 +11,50 @@
 	height: 100px;
 }
 
+
 /*body styles */
 
-.json_file_list{
+.json_file_list {
 	color: gold;
 	margin-top: 100px;
 }
-.file_list{
-	display:block;
+
+.file_list {
+	display: block;
 	cursor: pointer;
 	margin-top: 5px;
 	border: 1px solid gold;
 	color: blue;
 	font-style: italic;
 }
-.brick{
+
+.brick {
 	color: saddlebrown;
 }
-.sub_title{
-	color:gray;
+
+.sub_title {
+	color: gray;
 	border: 1px solid gold;
-	padding:5px 5px 5px 5px;
-	border-radius:10px;
+	padding: 5px 5px 5px 5px;
+	border-radius: 10px;
 	text-align: center;
 	height: auto;
 }
-.file_box{
+
+.file_box {
 	padding-left: 20px;
 }
-.copyright{
+
+.copyright {
 	text-align: center;
 }
-.upload_json{
+
+.upload_json {
 	margin-top: 10px;
 	margin-bottom: 10px;
 }
 
-.search{
+.search {
 	margin-left: 6px;
 	margin-right: 0px;
 	margin-top: 10px;
@@ -55,23 +62,23 @@
 	text-align: center;
 }
 
-th{
+th {
 	font-weight: normal;
 	font-family: "Times New Roman";
 	font-size: 20px;
-	padding:10px;
+	padding: 10px;
 	text-align: center;
 }
 
-td{
+td {
 	font-weight: normal;
 	font-family: "Times New Roman";
 	font-size: 14px;
-	padding:10px;
+	padding: 10px;
 	text-align: center;
 }
 
-.button{
+.button {
 	color: blue;
 	border: solid 2px yellow;
 	margin-top: 10px;
@@ -80,73 +87,79 @@ td{
 	border-radius: 25px;
 }
 
-.file_to{
+.file_to {
 	display: block;
 	padding-top: 5px;
 }
 
+
 /* file upload section */
+
 .button {
-    -moz-appearance: button;
-    /* Firefox */
-    -webkit-appearance: button;
-    /* Safari and Chrome */
-    padding: 10px;
-    margin: 10px;
-    width: 70px;
+	-moz-appearance: button;
+	/* Firefox */
+	-webkit-appearance: button;
+	/* Safari and Chrome */
+	padding: 10px;
+	margin: 10px;
+	width: 70px;
 }
+
 .drop-box {
-    background: #F8F8F8;
-    border: 5px dashed #DDD;
-    width: 100%;
-    height: 100%;
-    text-align: center;
-    padding-top: 25px;
-    
+	background: #F8F8F8;
+	border: 5px dashed #DDD;
+	width: 100%;
+	height: 100%;
+	text-align: center;
+	padding-top: 25px;
 }
+
 .dragover {
-    border: 5px dashed blue;
+	border: 5px dashed blue;
 }
 
 
 /* angularjs powered styles */
+
 input.ng-invalid {
-    background-color: red;
+	background-color: red;
 }
 
 input.ng-valid {
-    background-color: lightblue;
+	background-color: lightblue;
 }
 
 
 /* modal styles */
-.error_modal{
+
+.error_modal {
 	margin-right: 25%;
-	margin-top:25%;
+	margin-top: 25%;
 	margin-bottom: 25%;
 	margin-left: 25%;
-};
+}
 
 .modal.ng-enter {
-  transition: opacity .5s ease-out;
-  opacity: 0;
+	transition: opacity .5s ease-out;
+	opacity: 0;
 }
+
 .modal.ng-enter.ng-enter-active {
-  opacity: 1;
+	opacity: 1;
 }
+
 .modal.ng-leave {
-  transition: opacity .5s ease-out;
-  opacity: 1;
+	transition: opacity .5s ease-out;
+	opacity: 1;
 }
+
 .modal.ng-leave.ng-leave-active {
-  opacity: 0;
+	opacity: 0;
 }
+
 
 /*footer styles*/
 
-.footer{
+.footer {
 	margin-top: auto;
 }
-
-
-

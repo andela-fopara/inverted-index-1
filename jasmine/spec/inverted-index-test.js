@@ -1,72 +1,16 @@
 /* test suites for the inverted index project */
+import InvertedIndex from '../lib/js/inverted-index.js';
+import book1 from './json_files/books1.json'; 
+import book2 from './json_files/books2.json'; 
+import book3 from './json_files/books3.json'; 
+import books4 from './json_files/books4.json';
+import books5 from './json_files/books5.json';
+import books6 from './json_files/books6.json';
+import correctIndex from './json_files/correctIndex.json';
+import wrongAnswer from './json_files/wrongAnswer.json';
+import correctArrayOfIndices from './json_files/correctArrayOfIndices.json';
+
 const invertedIndex = new InvertedIndex();
-const book1 = [
-  {
-    title: 'Alice in Wonderland',
-    text: 'Alice falls into a rabbit hole and enters a world full of imagination.'
-  },
-  {
-    title: 'The Lord of the Rings: The Fellowship of the Ring.',
-    text: 'An unusual alliance of man, elf, dwarf, wizard and hobbit seek to destroy a powerful ring.'
-  }
-];
-const book2 = [];
-const book3 = [{
-  title: 'Ada in the Wonderland',
-  text: 'Going to the Moon!'
-},
-{
-  title: 'Obi is a boy',
-  text: 'Rules the world.'
-}
-];
-const book4 = [{
-  echo: 'Ada in Wonderland',
-  me: 'Going to the Moon!'
-},
-{
-  you: 'Obi is a boy',
-  us: 'Rules the world.'
-}
-];
-const book5 = ['elahsoft', 'ladyb', 'urchman'];
-const correctIndex = {
-  ada: [1],
-  in: [1],
-  wonderland: [1],
-  going: [1],
-  to: [1],
-  the: [1, 2],
-  moon: [1],
-  obi: [2],
-  is: [2],
-  a: [2],
-  boy: [2],
-  rules: [2],
-  world: [2]
-};
-const wrongAnswer = {
-  ada: [1],
-  in: [1],
-  wonderland: [1, 9, 8, 7],
-  going: [1],
-  to: [1, 5],
-  the: [1, 2],
-  moon: [1, 3],
-  obi: [2],
-  is: [2, 3],
-  a: [1, 2],
-  boy: [2],
-  rules: [2],
-  world: [2]
-};
-const correctArrayOfIndices = [
-  [1],
-  [1],
-  [2],
-  [1],
-  []
-];
 
 /* testSuite 1 
 *

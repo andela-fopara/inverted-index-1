@@ -1,0 +1,1 @@
+module.exports = require("npm:home-or-tmp@2.0.0/index");
