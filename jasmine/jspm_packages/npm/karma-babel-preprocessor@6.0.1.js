@@ -1,1 +1,0 @@
-module.exports = require("npm:karma-babel-preprocessor@6.0.1/lib/index.js");

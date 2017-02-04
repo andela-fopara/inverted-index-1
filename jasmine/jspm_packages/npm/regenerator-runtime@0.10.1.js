@@ -1,1 +1,0 @@
-module.exports = require("npm:regenerator-runtime@0.10.1/runtime-module.js");

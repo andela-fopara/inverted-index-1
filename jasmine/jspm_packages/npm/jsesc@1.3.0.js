@@ -1,1 +1,0 @@
-module.exports = require("npm:jsesc@1.3.0/jsesc.js");

@@ -3,8 +3,8 @@ import InvertedIndex from '../lib/js/inverted-index.js';
 import book1 from './json_files/books1.json'; 
 import book2 from './json_files/books2.json'; 
 import book3 from './json_files/books3.json'; 
-import books4 from './json_files/books4.json';
-import books5 from './json_files/books5.json';
+import book4 from './json_files/books4.json';
+import book5 from './json_files/books5.json';
 import books6 from './json_files/books6.json';
 import correctIndex from './json_files/correctIndex.json';
 import wrongAnswer from './json_files/wrongAnswer.json';
@@ -12,7 +12,8 @@ import correctArrayOfIndices from './json_files/correctArrayOfIndices.json';
 
 const invertedIndex = new InvertedIndex();
 
-/* testSuite 1 
+/* 
+* testSuite 1 
 *
 *Tests that the file read when createIndex 
 *is called is not empty 

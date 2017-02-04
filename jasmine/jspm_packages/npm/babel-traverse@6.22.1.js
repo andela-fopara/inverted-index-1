@@ -1,1 +1,0 @@
-module.exports = require("npm:babel-traverse@6.22.1/lib/index.js");

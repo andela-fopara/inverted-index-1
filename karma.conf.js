@@ -5,11 +5,8 @@ module.exports = function (config) {
   config.set({
 
     // base path that will be used to resolve all patterns (eg. files, exclude)
-    basePath: 'jasmine/',
+    basePath: '',
 
-    plugins: [
-            'browserify',
-          ],
 
     // frameworks to use
     // available frameworks: https://npmjs.org/browse/keyword/karma-adapter
@@ -17,25 +14,41 @@ module.exports = function (config) {
 
 
     // list of files / patterns to load in the browser
-   files: [
-      './lib/js/inverted-index.js',
-      './spec/inverted-index-test.js'
+    files: [
+      './jasmine/lib/js/inverted-index.js',
+      './jasmine/spec/inverted-index-test.js'
     ],
-    
+
+    coverageReporter: {
+      type: 'lcov',
+      dir: 'coverage/'
+    },
+
     // list of files to exclude
     exclude: [],
 
 
     // preprocess matching files before serving them to the browser
     // available preprocessors: https://npmjs.org/browse/keyword/karma-preprocessor
+    // preprocessors: {
+    //   'src/js/inverted-index.js': ['coverage']
+    // },
     preprocessors: {
-      './lib/js/*.js': ['browserify','coverage'],
-      './spec/*.js': ['browserify','coverage'],
+      './jasmine/lib/js/inverted-index.js': ['browserify','coverage'],
+      './jasmine/spec/inverted-index-test.js': ['browserify']
     },
     browserify: {
             debug: true,
             transform: [ 'babelify' ]
         },
+      
+      coverageReporter: {
+          dir: 'coverage/',
+          reporters: [
+            { type: 'text-summary' }
+          ]
+        },
+        browserNoActivityTimeout: 180000,
 
     // test results reporter to use
     // possible values: 'dots', 'progress'

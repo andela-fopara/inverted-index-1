@@ -1,5 +1,5 @@
 import gulp from 'gulp';
-import connect from 'gulp-connect';
+import connect from 'gulp-connect-multi';
 import opens from 'gulp-open';
 import coveralls from 'gulp-coveralls';
 import jasmineBrowser from 'gulp-jasmine-browser';
@@ -7,64 +7,91 @@ import watch from 'gulp-watch';
 import babelify from 'babelify';
 import browserify from 'browserify';
 import source from 'vinyl-source-stream';
+import karma from 'karma';
+import gutil from 'gulp-util';
+
+const Server = karma.Server;
 
 const port = process.env.PORT || 8004;
 
-gulp.task('connect', () => {
-  connect.server({
-    root: '/src',
-    port,
-    livereload: true
-  });
-});
+var appServer = connect(),
+    jasmineTestServer = connect(),
+    coverageServer = connect();
 
-gulp.task('openApp', () => {
-  gulp.src('./src/index.html')
-    .pipe(opens({
-      uri: 'http://localhost:8004/'
-    }));
-});
+gulp.task('appConnect', appServer.server({
+  root: ['./src'],
+  port: 8888,
+  livereload: true,
+  open: {
+    browser: 'Google Chrome'  // if not working OS X browser: 'Google Chrome' 
+  }
+}));
 
-gulp.task('openTest', () => {
-  gulp.src('./jasmine/SpecRunner.html')
-    .pipe(opens({
-      uri: 'http://localhost:8004/'
-    }));
+gulp.task('jasmineTestConnect', jasmineTestServer.server({
+  root: ['./jasmine'],
+  port,
+  livereload: false,
+  open: {
+    browser: 'Google Chrome' // if not working OS X browser: 'Google Chrome' 
+  }
+}));
+
+gulp.task('coverage', coverageServer.server({
+  root: ['./jasmine/coverage'],
+  port: 8005,
+  livereload: false,
+  open: {
+    browser: 'Google Chrome' // if not working OS X browser: 'Google Chrome' 
+  }
+}));
+
+gulp.task('sendCoverage', (done) => {
+  new Server({
+    configFile: __dirname + '/karma.conf.js',
+    singleRun: true
+  }, function(err){
+        if(err === 0){
+            done();
+        } else {
+            done(new gutil.PluginError('karma', {
+                message: 'Karma Tests failed'
+            }));
+        }
+    }).start();
 });
 
 gulp.task('watch', () => {
   gulp.watch('./src/*.html', ['html']);
   gulp.watch('./src/**/*.css', ['css']);
   gulp.watch('./src/**/*.js', ['js']);
-  gulp.watch('./jasmine/SpecRunner.html', ['specRunner']);
+  gulp.watch('./jasmine/*.html', ['htmlJasmine']);
+  gulp.watch('./jasmine/**/*.js', ['jsJasmine']);
 });
 
 gulp.task('html', () => {
   gulp.src('./src/*.html')
-    .pipe(connect.reload());
+    .pipe(appServer.reload());
 });
 
 gulp.task('css', () => {
   gulp.src('./src/css/*.css')
-    .pipe(connect.reload());
+    .pipe(appServer.reload());
 });
 
 gulp.task('js', () => {
   gulp.src('./src/js/*.js')
-    .pipe(connect.reload());
+    .pipe(appServer.reload());
+});
+gulp.task('jsJasmine', () => {
+  gulp.src('./jasmine/**/*.js')
+    .pipe(jasmineTestServer.reload());
+});
+gulp.task('htmlJasmine', () => {
+  gulp.src('./jasmine/*.html')
+    .pipe(jasmineTestServer.reload());
 });
 
-/*gulp.task('test', () => {
-  const filesForTest = ['./jasmine/lib/js/inverted-index.js', './jasmine/spec/inverted-index-test.js'];
-  return gulp.src(filesForTest)
-    .pipe(watch(filesForTest))
-    .pipe(jasmineBrowser.specRunner())
-    .pipe(jasmineBrowser.server({
-      port
-    }));
-});*/
-
-gulp.task("test", function(){
+gulp.task("build", function(){
     const filesForTest = ['./jasmine/spec/inverted-index-test.js'];
     return browserify({
         entries: filesForTest
@@ -75,11 +102,7 @@ gulp.task("test", function(){
     .bundle()
     .pipe(source("bundle.js"))
     .pipe(gulp.dest("jasmine/build"))
-    .pipe(watch(filesForTest))
-    .pipe(jasmineBrowser.specRunner())
-    .pipe(jasmineBrowser.server({
-      port
-    }));
 });
 
-gulp.task('default', ['connect', 'open', 'watch', 'html', 'css', 'js']);
+gulp.task('default', ['appConnect','jasmineTestConnect','coverage','sendCoverage', 'watch', 'html', 'css', 'js']);
+

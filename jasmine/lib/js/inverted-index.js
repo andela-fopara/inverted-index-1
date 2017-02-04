@@ -214,4 +214,4 @@ class InvertedIndex {
   }
 }
 
-export { InvertedIndex };
+export default InvertedIndex;
