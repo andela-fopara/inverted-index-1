@@ -1,0 +1,22 @@
+/dist
+gulpfile.babel.js
+src/js/app.js
+node_modules
+coverage
+src/js/lib
+src/css
+jasmine/lib/jasmine-2.3.4
+karma.conf.js
+README.md
+LICENSE
+jasmine/spec/json_files
+search string
+jasmine/MIT.LICENSE
+jasmine/SpecRunner.html
+src/books.json
+src/error_modal.html
+src/index.html
+src/images
+jasmine/spec/books.json
+feedback.md
+
