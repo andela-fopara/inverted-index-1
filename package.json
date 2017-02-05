@@ -4,7 +4,7 @@
   "description": "Andela Inverted Index Application for Checkpoint 1 Class 22",
   "main": "index.html",
   "scripts": {
-    "test": "karma start",
+    "test": "gulp sendCoverage",
     "start": "gulp",
     "postinstall": "npm install gulp"
   },

@@ -9,10 +9,7 @@ jasmine/lib
 karma.conf.js
 README.md
 LICENSE
-books2.json
-books3.json
-books1.json
-package.json
+jasmine/spec/json_files
 search string
 jasmine/MIT.LICENSE
 jasmine/SpecRunner.html
@@ -21,11 +18,5 @@ src/error_modal.html
 src/index.html
 src/images
 jasmine/spec/books.json
-books6.json
-books5.json
-books4.json
-correctArrayOfIndices.json
-correctIndex.json
-wrongAnswer.json
 feedback.md
 

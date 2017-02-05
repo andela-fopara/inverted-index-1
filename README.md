@@ -7,7 +7,7 @@ This is an application that generates Index for uploaded files. The files can be
 
 **Usage**
 
-- Clone the repository git clone https://github.com/andela-f-opara/inverted-index-1.git
+- Clone the repository git clone https://github.com/andela-fopara/inverted-index-1.git
 - Run npm install to install all dependencies.
 - To run test, run npm test
 - To use inverted index, run npm start

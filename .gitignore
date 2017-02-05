@@ -29,4 +29,5 @@ node_modules
 dist
 .env
 coverage
+feedback.md
 

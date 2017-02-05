@@ -1,5 +1,6 @@
-/* index header styles */
-
+/* 
+* index header styles 
+*/
 .index_header {
 	color: blue;
 	margin-top: 50px;
@@ -11,9 +12,9 @@
 	height: 100px;
 }
 
-
-/*body styles */
-
+/*
+* body styles 
+*/
 .json_file_list {
 	color: gold;
 	margin-top: 100px;
@@ -93,8 +94,9 @@ td {
 }
 
 
-/* file upload section */
-
+/* 
+* file upload section 
+*/
 .button {
 	-moz-appearance: button;
 	/* Firefox */
@@ -119,8 +121,9 @@ td {
 }
 
 
-/* angularjs powered styles */
-
+/* 
+* angularjs powered styles 
+*/
 input.ng-invalid {
 	background-color: red;
 }
@@ -130,8 +133,9 @@ input.ng-valid {
 }
 
 
-/* modal styles */
-
+/* 
+* modal styles 
+*/
 .error_modal {
 	margin-right: 25%;
 	margin-top: 25%;
@@ -158,8 +162,9 @@ input.ng-valid {
 }
 
 
-/*footer styles*/
-
+/* 
+* footer styles
+*/
 .footer {
 	margin-top: auto;
 }

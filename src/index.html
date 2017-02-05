@@ -51,7 +51,7 @@
               <h5 class="brick"> File(s) Selected </h5>
               <p id="file_count">
                 <span ng-if="file_names.length === 0">None</span>
-                <button ng-repeat="file_name in  file_names" ng-click="file_selected(file_name)" class="file_list"> {{ file_name }}</button>
+                <button ng-repeat="file_name in  file_names" ng-click="fileSelected(file_name)" class="file_list"> {{ file_name }}</button>
               </p>
               <!-- list ends here -->
             </div>

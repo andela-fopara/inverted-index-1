@@ -1,4 +1,7 @@
-/* test suites for the inverted index project */
+/* 
+* test suites for the 
+* inverted index project 
+*/
 import InvertedIndex from '../lib/js/inverted-index.js';
 import book1 from './json_files/books1.json'; 
 import book2 from './json_files/books2.json'; 
@@ -15,16 +18,16 @@ const invertedIndex = new InvertedIndex();
 /* 
 * testSuite 1 
 *
-*Tests that the file read when createIndex 
-*is called is not empty 
+* Tests that the file read when createIndex 
+* is called is not empty 
 */
 describe('Read book data', () => {
-  describe('assert that json file read as at the time index is created not empty', () => {
+  describe('assert that json file read as at the time index is created is not empty', () => {
     invertedIndex.createIndex(book1, 'book1.json');
-    it('assert that isEmpty function return false for book1', () => {
+    it('assert that isEmpty function returns false for non-empty file', () => {
       expect(invertedIndex.isEmpty(invertedIndex.books)).toBeFalsy();
     });
-    it('assert that isEmpty function return true for book2', () => {
+    it('assert that isEmpty function returns true for an empty file', () => {
       expect(invertedIndex.isEmpty(book2)).toBeTruthy();
     });
     invertedIndex.createIndex(book2, 'book2.json');
@@ -34,7 +37,8 @@ describe('Read book data', () => {
   });
 });
 
-/* testSuite 2 
+/* 
+* testSuite 2 
 *
 * Tests that file contains a valid json
 * Tests the index is populated immediately
@@ -43,18 +47,21 @@ describe('Read book data', () => {
 * to the correct objects in the array
 */
 describe('Populate Index', () => {
+  beforeEach(function() {
+    invertedIndex.createIndex(book3, 'book3.json');
+  });
   describe('Ensures the file content is actually a valid JSON Array', () => {
-    it('assert that isValidJsonArray returns true for book1', () => {
+    it('assert that isValidJsonArray returns true for a valid json file', () => {
       expect(invertedIndex.isValidJsonArray(book3)).toBeTruthy();
     });
-    it('assert that isValidJsonArray returns false for book2', () => {
+    it('assert that isValidJsonArray returns false for an invalid json file', () => {
       expect(invertedIndex.isValidJsonArray(book4)).toBeFalsy();
     });
-    it('assert that isValidJsonArray returns false for book3', () => {
+    it('assert that isValidJsonArray returns false for another invalid json file of another structure', () => {
       expect(invertedIndex.isValidJsonArray(book5)).toBeFalsy();
     });
   });
-  invertedIndex.createIndex(book3, 'book3.json');
+
   describe('Test that Index is created once JSON file has been read', () => {
     it('assert that index is populated each time json file is read', () => {
       expect(invertedIndex.index).toEqual(correctIndex);
@@ -67,8 +74,9 @@ describe('Populate Index', () => {
       .toBe(invertedIndex.getObjectSize(invertedIndex.index));
     });
   });
+
   describe('Test that the index maps the string keys to the correct objects in the JSON array', () => {
-    describe('Confirm that isMapCorrect function works as expected', () => {
+    describe('Confirm that mapping procedure adopted works as expected', () => {
       it('invertedIndex.index[ada]).toEqual(correctIndex[ada]', () => {
         expect(invertedIndex.index['ada']).toEqual(correctIndex['ada']);
       });
@@ -88,11 +96,13 @@ describe('Populate Index', () => {
         expect(invertedIndex.index['a'] === wrongAnswer['a']).toBeFalsy();
       });
     });
+
     describe('Confirm that I can get the index with document id specified', () => {
       it('assert that invertedIndex.getIndex(book2.json) === invertedIndex.allIndex[book2.json]', () => {
         expect(invertedIndex.getIndex('book2.json')).toEqual(invertedIndex.allIndex['book2.json']);
       });
     });
+
     describe('Confirm that I can get the index with document id not specified', () => {
       it('assert that invertedIndex.getIndex() === invertedIndex.index', () => {
         expect(invertedIndex.getIndex()).toEqual(invertedIndex.allIndex['book3.json']);
@@ -102,13 +112,19 @@ describe('Populate Index', () => {
   });
 });
 
-/* testSuite 3 
+/* 
+* testSuite 3 
 *
 * Tests the search function works
 * for most possible cases
 */
 describe('Search index -:', () => {
-  const searchResult = invertedIndex.search('book3.json', 'Ada', 'In', ['world', 'Moon'], 'hello');
+   beforeEach(function() {
+    const searchResult = invertedIndex.search('book3.json', 'Ada', 'In', ['world', 'Moon'], 'hello');
+    const searchResult2 = invertedIndex.search('book3.json', 'Ada', 'In', 'world', 'Moon', 'hello');
+    const searchResult3 = invertedIndex.search('Ada', 'In', 'world', 'Moon', 'hello');
+  });
+  
   describe('Confirm that search works well for array of array mixed with words', () => {
     it('assert that correctArrayOfIndices[0] === invertedIndex.index[ada]', () => {
       expect(correctArrayOfIndices[0]).toEqual(invertedIndex.index['ada']);
@@ -131,7 +147,7 @@ describe('Search index -:', () => {
       expect(correctArrayOfIndices[4]).toEqual(searchResult[4]);
     });
   });
-  const searchResult2 = invertedIndex.search('book3.json', 'Ada', 'In', 'world', 'Moon', 'hello');
+
   describe('Confirm that search works well for array of words', () => {
     it('assert that correctArrayOfIndices[0] === invertedIndex.index[ada]', () => {
       expect(correctArrayOfIndices[0]).toEqual(invertedIndex.index['ada']);
@@ -155,7 +171,6 @@ describe('Search index -:', () => {
     });
   });
 
-  const searchResult3 = invertedIndex.search('Ada', 'In', 'world', 'Moon', 'hello');
   describe('Confirm that search works when fileName is undefined', () => {
     it('assert that correctArrayOfIndices[0] === invertedIndex.index[ada]', () => {
       expect(correctArrayOfIndices[0]).toEqual(invertedIndex.index['ada']);

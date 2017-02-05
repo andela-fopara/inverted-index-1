@@ -23,16 +23,16 @@ class InvertedIndex {
    * It Creates the index for the documents
    * in the file object
    * 
-   * @param {array} FileObject
+   * @param {array} fileObject
    * @param {String} fileName
    * @returns {void} returns nothing
    */
-  createIndex(FileObject, fileName) {
-    const isEmptyStatus = this.isEmpty(FileObject);
+  createIndex(fileObject, fileName) {
+    const isEmptyStatus = this.isEmpty(fileObject);
     if (!isEmptyStatus) {
-      const isValidJsonArrayStatus = this.isValidJsonArray(FileObject);
+      const isValidJsonArrayStatus = this.isValidJsonArray(fileObject);
       if (isValidJsonArrayStatus) {
-        this.books = FileObject;
+        this.books = fileObject;
         this.generateIndex(fileName);
       }
     }
@@ -44,15 +44,11 @@ class InvertedIndex {
    * It Checks that the books
    * instance variable is not empty
    * 
-   * @param {array} FileObject accepts an array 
+   * @param {array} fileObject accepts an array 
    * @returns {boolean} value showing if books is empty or not
    */
-  isEmpty(FileObject) {
-    let status = true;
-    if (FileObject.length) {
-      status = false;
-    }
-    return status;
+  isEmpty(fileObject) {
+    return fileObject.length ? false : true;
   }
 
   /**
@@ -67,43 +63,44 @@ class InvertedIndex {
    * @returns {void} returns no value
    */
   generateIndex(fileName) {
-    let IndexTemp = {};
+    let indexTemp = {};
     let title = [];
     let text = [];
     for (let i = 0; i < this.books.length; i++) {
       const Obj = this.books[i];
       title = this.removePunctuation(Obj.title).split(' ');
       text = this.removePunctuation(Obj.text).split(' ');
-      IndexTemp = this.process(title, IndexTemp, i);
-      IndexTemp = this.process(text, IndexTemp, i);
+      const tokenArrays = title.concat(text);
+      indexTemp = this.getDocumentIndex(tokenArrays, indexTemp, i);
     }
-    this.index = IndexTemp;
+    this.index = indexTemp;
     this.allIndex[fileName] = this.index;
   }
 
   /**
-   * process.
+   * getDocumentIndex.
    * 
    * It processes the passed text to index it
    * following the object array read
    * 
-   * @param {array} textOrTitle takes an array of strings
+   * @param {array} textAndTitle takes an array of strings
    * @param {object} IndexTemp takes a js object
    * @param {number} counter takes a number 
    * indicating the document being considered
    * @returns {object} returns no value
    */
-  process(textOrTitle, IndexTemp, counter) {
-    for (let j = 0; j < textOrTitle.length; j++) {
-      textOrTitle[j] = textOrTitle[j].toLowerCase();
-      if (IndexTemp[textOrTitle[j]] === undefined) {
-        IndexTemp[textOrTitle[j]] = [];
+  getDocumentIndex(textAndTitle, IndexTemp, counter) {
+    this.mostFrequency = 0;
+    for (let j = 0; j < textAndTitle.length; j++) {
+      textAndTitle[j] = textAndTitle[j].toLowerCase();
+      if (IndexTemp[textAndTitle[j]] === undefined) {
+        IndexTemp[textAndTitle[j]] = [];
       }
-      if (IndexTemp[textOrTitle[j]] !== undefined &&
-        !IndexTemp[textOrTitle[j]].includes(counter + 1)) {
-        IndexTemp[textOrTitle[j]].push(counter + 1);
-        if (IndexTemp[textOrTitle[j]].length > this.mostFrequency) {
-          this.mostFrequency = IndexTemp[textOrTitle[j]].length;
+      if (IndexTemp[textAndTitle[j]] !== undefined &&
+        !IndexTemp[textAndTitle[j]].includes(counter + 1)) {
+        IndexTemp[textAndTitle[j]].push(counter + 1);
+        if (IndexTemp[textAndTitle[j]].length > this.mostFrequency) {
+          this.mostFrequency = IndexTemp[textAndTitle[j]].length;
         }
       }
     }
@@ -135,13 +132,27 @@ class InvertedIndex {
    * @returns {array} The searchOutput value.
    */
   search(fileName, ...terms) {
-    const searchResult = [];
-    const termWord = [];
     if (typeof (fileName) === 'string' && fileName.endsWith('.json')) {
       this.index = this.allIndex[fileName];
     } else {
       terms.unshift(fileName);
     }
+    this.searchOutput = this.searchHelper(terms);
+    return this.searchOutput;
+  }
+
+  /**
+   * searchHelper
+   * 
+   * Assist search function to
+   * perform the search operation
+   * 
+   * @param {array} terms - The terms value.
+   * @returns {array} The searchResult value.
+   */
+  searchHelper(terms) {
+    const searchResult = [];
+    const termWord = [];
     let term = ' ';
     for (let i = 0; i < terms.length; i++) {
       if (Array.isArray(terms[i])) {
@@ -163,8 +174,7 @@ class InvertedIndex {
       termWord.push(key);
     }
     this.searchWord = termWord;
-    this.searchOutput = searchResult;
-    return this.searchOutput;
+    return searchResult;
   }
 
   /**
@@ -204,8 +214,8 @@ class InvertedIndex {
     let status = false;
     if (Array.isArray(fileContent)) {
       for (let i = 0; i < fileContent.length; i++) {
-        if (typeof (fileContent[i]) === typeof ({}) && 
-        fileContent[i]['title'] && fileContent[i]['text']) {
+        if (typeof (fileContent[i]) === typeof ({}) &&
+          fileContent[i]['title'] && fileContent[i]['text']) {
           status = true;
         }
       }
@@ -213,4 +223,3 @@ class InvertedIndex {
     return status;
   }
 }
-

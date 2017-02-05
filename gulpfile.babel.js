@@ -15,8 +15,7 @@ const Server = karma.Server;
 const port = process.env.PORT || 8004;
 
 var appServer = connect(),
-    jasmineTestServer = connect(),
-    coverageServer = connect();
+    jasmineTestServer = connect();
 
 gulp.task('appConnect', appServer.server({
   root: ['./src'],
@@ -30,15 +29,6 @@ gulp.task('appConnect', appServer.server({
 gulp.task('jasmineTestConnect', jasmineTestServer.server({
   root: ['./jasmine'],
   port,
-  livereload: false,
-  open: {
-    browser: 'Google Chrome' // if not working OS X browser: 'Google Chrome' 
-  }
-}));
-
-gulp.task('coverage', coverageServer.server({
-  root: ['./jasmine/coverage'],
-  port: 8005,
   livereload: false,
   open: {
     browser: 'Google Chrome' // if not working OS X browser: 'Google Chrome' 
@@ -104,5 +94,5 @@ gulp.task("build", function(){
     .pipe(gulp.dest("jasmine/build"))
 });
 
-gulp.task('default', ['appConnect','jasmineTestConnect','coverage','sendCoverage', 'watch', 'html', 'css', 'js']);
+gulp.task('default', ['appConnect','jasmineTestConnect','sendCoverage', 'watch', 'html', 'css', 'js']);
 

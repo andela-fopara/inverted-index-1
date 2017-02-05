@@ -54,33 +54,49 @@ nameSpace.controller('InvertedIndexController', ['$scope', '$sce', 'ModalService
         $scope.$apply(() => {
           $scope.content = content;
           if ($scope.file_names.indexOf(fileArray[i].name) === -1) {
-            if ($scope.content) {
+            if ($scope.content.length > 0) {
               try {
                 $scope.file_object = JSON.parse(content);
+                if ($scope.invertedIndex.isValidJsonArray($scope.file_object)) {
+                  $scope.invertedIndex.createIndex($scope.file_object, fileArray[i].name);
+                  $scope.files = fileArray[i];
+                  $scope.file_names.push($scope.files.name);
+                  $scope.allContents[$scope.files.name] = $scope.content;
+                  $scope.trusted_html_content = $sce.trustAsHtml(`<p><code>${$scope.content}</code></p>`);
+                  $scope.index = $scope.invertedIndex.getIndex();
+                  $scope.allMostFrequency[$scope.files.name] = $scope.invertedIndex.mostFrequency;
+                  $scope.progress.textContent = '100%';
+                  $scope.prepareIndexViewComponents();
+                } else {
+                  $scope.tokenNotFound = false;
+                  $scope.notValidJSONFile = true;
+                  $scope.isEmptyFile = false;
+                  $scope.readerAborted = false;
+                  $scope.fileALreadyUploaded = false;
+                  $scope.showErrorModal();
+                }
               } catch (exception) {
+                $scope.tokenNotFound = false;
                 $scope.notValidJSONFile = true;
-                $scope.showErrorModal();
-              }
-              if ($scope.invertedIndex.isValidJsonArray($scope.file_object)) {
-                $scope.invertedIndex.createIndex($scope.file_object, fileArray[i].name);
-                $scope.files = fileArray[i];
-                $scope.file_names.push($scope.files.name);
-                $scope.allContents[$scope.files.name] = $scope.content;
-                $scope.trusted_html_content = $sce.trustAsHtml(`<p><code>${$scope.content}</code></p>`);
-                $scope.index = $scope.invertedIndex.index;
-                $scope.allMostFrequency[$scope.files.name] = $scope.invertedIndex.mostFrequency;
-                $scope.progress.textContent = '100%';
-                $scope.prepareIndexViewComponents();
-              } else {
-                $scope.notValidJSONFile = true;
+                $scope.isEmptyFile = false;
+                $scope.readerAborted = false;
+                $scope.fileALreadyUploaded = false;
                 $scope.showErrorModal();
               }
             } else {
+              $scope.tokenNotFound = false;
+              $scope.notValidJSONFile = false;
               $scope.isEmptyFile = true;
+              $scope.readerAborted = false;
+              $scope.fileALreadyUploaded = false;
               $scope.showErrorModal();
             }
           } else {
-            $scope.fileALreadyUploaded = true;
+             $scope.tokenNotFound = false;
+              $scope.notValidJSONFile = false;
+              $scope.isEmptyFile = false;
+              $scope.readerAborted = false;
+              $scope.fileALreadyUploaded = true;
             $scope.showErrorModal();
           }
         });
@@ -89,7 +105,7 @@ nameSpace.controller('InvertedIndexController', ['$scope', '$sce', 'ModalService
     }
   };
 
-  $scope.file_selected = (file) => {
+  $scope.fileSelected = (file) => {
     $scope.index = $scope.invertedIndex.allIndex[file];
     $scope.prepareIndexViewComponents(file);
   };
@@ -140,7 +156,17 @@ nameSpace.controller('InvertedIndexController', ['$scope', '$sce', 'ModalService
         searchResult, i);
       $scope.index_search_display[i] = searchInView;
     }
-    $scope.index = $scope.invertedIndex.index;
+
+    if ($scope.index_search_display[1] === undefined) {
+      $scope.tokenNotFound = true;
+      $scope.notValidJSONFile = false;
+      $scope.isEmptyFile = false;
+      $scope.readerAborted = false;
+      $scope.showErrorModal();
+    }
+    $scope.index = $scope.invertedIndex.getIndex();
+
+
   };
 
   $scope.prepareSearchIndexViewComponents = (searchWordsArray, searchResult, counter) => {
@@ -190,6 +216,8 @@ nameSpace.controller('InvertedIndexController', ['$scope', '$sce', 'ModalService
       $scope.error_message = 'JSON File is empty';
     } else if ($scope.readerAborted) {
       $scope.error_message = 'File Reading was unsuccessful!';
+    } else if ($scope.tokenNotFound) {
+      $scope.error_message = 'The entire search token(s) not found!';
     } else {
       $scope.error_message = 'File(s) has already been uploaded!';
     }
