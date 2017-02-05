@@ -1,3 +1,5 @@
+
+import InvertedIndex from './inverted-index.js';
 const nameSpace = angular.module('InvertedIndex', ['ngSanitize', 'angularModalService']);
 
 nameSpace.controller('InvertedIndexController', ['$scope', '$sce', 'ModalService', ($scope, $sce, ModalService) => {
@@ -148,16 +150,16 @@ nameSpace.controller('InvertedIndexController', ['$scope', '$sce', 'ModalService
     $scope.selected_file = [];
     $scope.setSelectedValues();
     $scope.index_search_display = [];
+    let searchWordsArray = [];
     for (let i = 0; i < $scope.selected_file.length; i++) {
       const searchResult = $scope.invertedIndex.search($scope.selected_file[i],
         $scope.search_strings);
-      const searchWordsArray = $scope.invertedIndex.removePunctuation($scope.search_strings).split(' ');
+      searchWordsArray = $scope.invertedIndex.removePunctuation($scope.search_strings).split(' ');
       const searchInView = $scope.prepareSearchIndexViewComponents(searchWordsArray,
         searchResult, i);
       $scope.index_search_display[i] = searchInView;
     }
-
-    if ($scope.index_search_display[1] === undefined) {
+    if ($scope.invertedIndex.searchStatus === 1) {
       $scope.tokenNotFound = true;
       $scope.notValidJSONFile = false;
       $scope.isEmptyFile = false;
@@ -217,7 +219,7 @@ nameSpace.controller('InvertedIndexController', ['$scope', '$sce', 'ModalService
     } else if ($scope.readerAborted) {
       $scope.error_message = 'File Reading was unsuccessful!';
     } else if ($scope.tokenNotFound) {
-      $scope.error_message = 'The entire search token(s) not found!';
+      $scope.error_message = 'Some or the entire search token(s) not found!';
     } else {
       $scope.error_message = 'File(s) has already been uploaded!';
     }

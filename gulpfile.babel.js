@@ -81,7 +81,7 @@ gulp.task('htmlJasmine', () => {
     .pipe(jasmineTestServer.reload());
 });
 
-gulp.task("build", function(){
+gulp.task("buildTest", function(){
     const filesForTest = ['./jasmine/spec/inverted-index-test.js'];
     return browserify({
         entries: filesForTest
@@ -92,6 +92,19 @@ gulp.task("build", function(){
     .bundle()
     .pipe(source("bundle.js"))
     .pipe(gulp.dest("jasmine/build"))
+});
+
+gulp.task("buildApp", function(){
+    const filesForTest = ['./src/js/app.js'];
+    return browserify({
+        entries: filesForTest
+    })
+    .transform(babelify.configure({
+        presets : ["es2015"]
+    }))
+    .bundle()
+    .pipe(source("bundle.js"))
+    .pipe(gulp.dest("src/build"))
 });
 
 gulp.task('default', ['appConnect','jasmineTestConnect','sendCoverage', 'watch', 'html', 'css', 'js']);

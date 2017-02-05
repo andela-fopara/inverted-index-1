@@ -15,6 +15,7 @@ class InvertedIndex {
     this.searchWord = [];
     this.searchOutput = [];
     this.mostFrequency = 0;
+    this.searchStatus = 0;
   }
 
   /**
@@ -48,7 +49,7 @@ class InvertedIndex {
    * @returns {boolean} value showing if books is empty or not
    */
   isEmpty(fileObject) {
-    return fileObject.length ? false : true;
+    return fileObject.length === 0;
   }
 
   /**
@@ -66,13 +67,12 @@ class InvertedIndex {
     let indexTemp = {};
     let title = [];
     let text = [];
-    for (let i = 0; i < this.books.length; i++) {
-      const Obj = this.books[i];
-      title = this.removePunctuation(Obj.title).split(' ');
-      text = this.removePunctuation(Obj.text).split(' ');
+    this.books.forEach((document, index) => {
+      title = this.removePunctuation(document.title).split(' ');
+      text = this.removePunctuation(document.text).split(' ');
       const tokenArrays = title.concat(text);
-      indexTemp = this.getDocumentIndex(tokenArrays, indexTemp, i);
-    }
+      indexTemp = this.getDocumentIndex(tokenArrays, indexTemp, index);
+    }, this);
     this.index = indexTemp;
     this.allIndex[fileName] = this.index;
   }
@@ -84,27 +84,27 @@ class InvertedIndex {
    * following the object array read
    * 
    * @param {array} textAndTitle takes an array of strings
-   * @param {object} IndexTemp takes a js object
+   * @param {object} indexTemp takes a js object
    * @param {number} counter takes a number 
    * indicating the document being considered
    * @returns {object} returns no value
    */
-  getDocumentIndex(textAndTitle, IndexTemp, counter) {
+  getDocumentIndex(textAndTitle, indexTemp, counter) {
     this.mostFrequency = 0;
-    for (let j = 0; j < textAndTitle.length; j++) {
-      textAndTitle[j] = textAndTitle[j].toLowerCase();
-      if (IndexTemp[textAndTitle[j]] === undefined) {
-        IndexTemp[textAndTitle[j]] = [];
+    textAndTitle.forEach((token) => {
+      token = token.toLowerCase();
+      if (indexTemp[token] === undefined) {
+        indexTemp[token] = [];
       }
-      if (IndexTemp[textAndTitle[j]] !== undefined &&
-        !IndexTemp[textAndTitle[j]].includes(counter + 1)) {
-        IndexTemp[textAndTitle[j]].push(counter + 1);
-        if (IndexTemp[textAndTitle[j]].length > this.mostFrequency) {
-          this.mostFrequency = IndexTemp[textAndTitle[j]].length;
+      if (indexTemp[token] !== undefined &&
+        !indexTemp[token].includes(counter + 1)) {
+        indexTemp[token].push(counter + 1);
+        if (indexTemp[token].length > this.mostFrequency) {
+          this.mostFrequency = indexTemp[token].length;
         }
       }
-    }
-    return IndexTemp;
+    }, this);
+    return indexTemp;
   }
 
   /**
@@ -154,25 +154,27 @@ class InvertedIndex {
     const searchResult = [];
     const termWord = [];
     let term = ' ';
-    for (let i = 0; i < terms.length; i++) {
-      if (Array.isArray(terms[i])) {
-        for (let j = 0; j < terms[i].length; j++) {
-          term = `${term} ${terms[i][j]}`;
-        }
+    this.searchStatus = 0;
+    terms.forEach((token) => {
+      if (Array.isArray(token)) {
+        token.forEach((tokenInner) => {
+          term = `${term} ${tokenInner}`;
+        }, this);
       } else {
-        term = `${term} ${terms[i]}`;
+        term = `${term} ${token}`;
       }
-    }
+    }, this);
     const termArray = this.removePunctuation(term).split(' ');
-    for (let i = 0; i < termArray.length; i++) {
-      const key = termArray[i].toLowerCase();
+    termArray.forEach((token) => {
+      const key = token.toLowerCase();
       if (this.index[key]) {
         searchResult.push(this.index[key]);
       } else {
         searchResult.push([]);
+        this.searchStatus = 1;
       }
       termWord.push(key);
-    }
+    }, this);
     this.searchWord = termWord;
     return searchResult;
   }
@@ -213,13 +215,14 @@ class InvertedIndex {
   isValidJsonArray(fileContent) {
     let status = false;
     if (Array.isArray(fileContent)) {
-      for (let i = 0; i < fileContent.length; i++) {
-        if (typeof (fileContent[i]) === typeof ({}) &&
-          fileContent[i]['title'] && fileContent[i]['text']) {
+      fileContent.forEach((documentObject) => {
+        if (typeof (documentObject) === typeof ({}) &&
+          documentObject['title'] && documentObject['text']) {
           status = true;
         }
-      }
+      }, this);
     }
     return status;
   }
 }
+export default InvertedIndex;

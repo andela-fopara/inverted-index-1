@@ -119,10 +119,13 @@ describe('Populate Index', () => {
 * for most possible cases
 */
 describe('Search index -:', () => {
+   let searchResult = [],
+    searchResult2 = [],
+    searchResult3 = [];
    beforeEach(function() {
-    const searchResult = invertedIndex.search('book3.json', 'Ada', 'In', ['world', 'Moon'], 'hello');
-    const searchResult2 = invertedIndex.search('book3.json', 'Ada', 'In', 'world', 'Moon', 'hello');
-    const searchResult3 = invertedIndex.search('Ada', 'In', 'world', 'Moon', 'hello');
+    searchResult = invertedIndex.search('book3.json', 'Ada', 'In', ['world', 'Moon'], 'hello');
+    searchResult2 = invertedIndex.search('book3.json', 'Ada', 'In', 'world', 'Moon', 'hello');
+    searchResult3 = invertedIndex.search('Ada', 'In', 'world', 'Moon', 'hello');
   });
   
   describe('Confirm that search works well for array of array mixed with words', () => {

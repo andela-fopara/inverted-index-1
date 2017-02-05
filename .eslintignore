@@ -5,7 +5,7 @@ node_modules
 coverage
 src/js/lib
 src/css
-jasmine/lib
+jasmine/lib/jasmine-2.3.4
 karma.conf.js
 README.md
 LICENSE
