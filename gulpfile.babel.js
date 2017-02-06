@@ -22,7 +22,7 @@ gulp.task('appConnect', appServer.server({
   port,
   livereload: true,
   open: {
-    browser: 'Google Chrome'  // if not working OS X browser: 'Google Chrome' 
+    browser: 'chrome'  // if not working OS X browser: 'Google Chrome' 
   }
 }));
 
