@@ -5,7 +5,7 @@
   "main": "index.html",
   "scripts": {
     "test": "gulp sendCoverage",
-    "start": "gulp",
+    "start": "gulp appConnect",
     "postinstall": "npm install gulp"
   },
   "repository": {
