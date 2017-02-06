@@ -19,7 +19,7 @@ var appServer = connect(),
 
 gulp.task('appConnect', appServer.server({
   root: ['./src'],
-  port: 8888,
+  port,
   livereload: true,
   open: {
     browser: 'Google Chrome'  // if not working OS X browser: 'Google Chrome' 
@@ -28,7 +28,7 @@ gulp.task('appConnect', appServer.server({
 
 gulp.task('jasmineTestConnect', jasmineTestServer.server({
   root: ['./jasmine'],
-  port,
+  8888,
   livereload: false,
   open: {
     browser: 'Google Chrome' // if not working OS X browser: 'Google Chrome' 
