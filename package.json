@@ -65,6 +65,7 @@
     "coveralls": "^2.11.15",
     "gulp": "^3.9.1",
     "gulp-connect": "^5.0.0",
+    "gulp-connect-multi": "^1.0.8",
     "gulp-coveralls": "^0.1.4",
     "gulp-jasmine": "^2.4.2",
     "gulp-jasmine-browser": "^1.7.1",
