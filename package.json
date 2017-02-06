@@ -71,6 +71,9 @@
     "gulp-jasmine-browser": "^1.7.1",
     "gulp-jasmine-livereload-task": "^0.10.1",
     "gulp-notify": "^2.2.0",
-    "gulp-open": "^2.0.0"
+    "gulp-open": "^2.0.0",
+    "babelify": "^7.3.0",
+    "browserify": "^14.0.0",
+    "vinyl-source-stream": "^1.1.0"
   }
 }
