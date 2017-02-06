@@ -74,6 +74,13 @@
     "gulp-open": "^2.0.0",
     "babelify": "^7.3.0",
     "browserify": "^14.0.0",
-    "vinyl-source-stream": "^1.1.0"
+    "vinyl-source-stream": "^1.1.0",
+    "karma": "^1.4.0",
+    "karma-browserify": "^5.1.1",
+    "karma-chrome-launcher": "^2.0.0",
+    "karma-coverage": "^1.1.1",
+    "karma-coveralls": "^1.1.2",
+    "karma-es6-transpiler-preprocessor": "0.0.1",
+    "karma-jasmine": "^1.1.0"
   }
 }
