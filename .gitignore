@@ -32,5 +32,20 @@ dist
 coverage
 feedback.md
 .vscode/
+src/js/lib
+jasmine/build
+jasmine/spec/json_files
+jasmine/config.js
+jasmine/MIT.LICENSE
+jasmine/grunt.json
+jasmine/lib/jasmine-2.3.4
+src/css/lib
+src/js/lib
+src/images
+src/build
+
+
+
+
 
 
