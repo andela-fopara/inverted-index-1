@@ -125,9 +125,9 @@ describe('Search index -:', () => {
      searchResult2 = [],
      searchResult3 = [];
    beforeEach(() => {
-      searchResult = invertedIndex.search('book3.json', 'Ada', 'In', ['world', 'Moon'], 'hello');
-      searchResult2 = invertedIndex.search('book3.json', 'Ada', 'In', 'world', 'Moon', 'hello');
-      searchResult3 = invertedIndex.search('Ada', 'In', 'world', 'Moon', 'hello');
+     searchResult = invertedIndex.search('book3.json', 'Ada', 'In', ['world', 'Moon'], 'hello');
+     searchResult2 = invertedIndex.search('book3.json', 'Ada', 'In', 'world', 'Moon', 'hello');
+     searchResult3 = invertedIndex.search('Ada', 'In', 'world', 'Moon', 'hello');
   });
   
   describe('Confirm that search works well for array of array mixed with words', () => {
