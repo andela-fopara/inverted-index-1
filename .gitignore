@@ -31,8 +31,7 @@ dist
 .env
 coverage
 feedback.md
-.vscode/
-src/js/lib
+.vscode
 jasmine/build
 jasmine/spec/json_files
 jasmine/config.js
