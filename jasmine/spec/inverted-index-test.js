@@ -47,7 +47,7 @@ describe('Read book data', () => {
 * to the correct objects in the array
 */
 describe('Populate Index', () => {
-  beforeEach(function() {
+  beforeEach(() => {
     invertedIndex.createIndex(book3, 'book3.json');
   });
   describe('Ensures the file content is actually a valid JSON Array', () => {
@@ -57,7 +57,7 @@ describe('Populate Index', () => {
     it('assert that isValidJsonArray returns false for an invalid json file', () => {
       expect(invertedIndex.isValidJsonArray(book4)).toBeFalsy();
     });
-    it('assert that isValidJsonArray returns false for another invalid json file of another structure', () => {
+    it('assert that isValidJsonArray returns false for invalid json file', () => {
       expect(invertedIndex.isValidJsonArray(book5)).toBeFalsy();
     });
   });
@@ -75,7 +75,8 @@ describe('Populate Index', () => {
     });
   });
 
-  describe('Test that the index maps the string keys to the correct objects in the JSON array', () => {
+  describe('Test that the string keys are mapped to the correct objects', 
+    () => {
     describe('Confirm that mapping procedure adopted works as expected', () => {
       it('invertedIndex.index[ada]).toEqual(correctIndex[ada]', () => {
         expect(invertedIndex.index['ada']).toEqual(correctIndex['ada']);
@@ -98,7 +99,8 @@ describe('Populate Index', () => {
     });
 
     describe('Confirm that I can get the index with document id specified', () => {
-      it('assert that invertedIndex.getIndex(book2.json) === invertedIndex.allIndex[book2.json]', () => {
+      it('assert that invertedIndex.getIndex(book2.json) === invertedIndex.allIndex[book2.json]', 
+        () => {
         expect(invertedIndex.getIndex('book2.json')).toEqual(invertedIndex.allIndex['book2.json']);
       });
     });
@@ -119,13 +121,13 @@ describe('Populate Index', () => {
 * for most possible cases
 */
 describe('Search index -:', () => {
-   let searchResult = [],
-    searchResult2 = [],
-    searchResult3 = [];
-   beforeEach(function() {
-    searchResult = invertedIndex.search('book3.json', 'Ada', 'In', ['world', 'Moon'], 'hello');
-    searchResult2 = invertedIndex.search('book3.json', 'Ada', 'In', 'world', 'Moon', 'hello');
-    searchResult3 = invertedIndex.search('Ada', 'In', 'world', 'Moon', 'hello');
+  let searchResult = [],
+     searchResult2 = [],
+     searchResult3 = [];
+   beforeEach(() => {
+     searchResult = invertedIndex.search('book3.json', 'Ada', 'In', ['world', 'Moon'], 'hello');
+     searchResult2 = invertedIndex.search('book3.json', 'Ada', 'In', 'world', 'Moon', 'hello');
+     searchResult3 = invertedIndex.search('Ada', 'In', 'world', 'Moon', 'hello');
   });
   
   describe('Confirm that search works well for array of array mixed with words', () => {
@@ -187,10 +189,11 @@ describe('Search index -:', () => {
       expect(correctArrayOfIndices[2]).toEqual(invertedIndex.index['world']);
       expect(searchResult3[2]).toEqual(invertedIndex.index['world']);
     });
-    it('assert that correctArrayOfIndices[3] === invertedIndex.index[moon]', () => {
-      expect(correctArrayOfIndices[3]).toEqual(invertedIndex.index['moon']);
-      expect(searchResult3[3]).toEqual(invertedIndex.index['moon']);
-    });
+    it('assert that correctArrayOfIndices[3] === invertedIndex.index[moon]',
+      () => {
+        expect(correctArrayOfIndices[3]).toEqual(invertedIndex.index['moon']);
+        expect(searchResult3[3]).toEqual(invertedIndex.index['moon']);
+      });
     it('assert that correctArrayOfIndices[4] === searchResult[hello]', () => {
       expect(searchResult3[4]).toEqual([]);
       expect(correctArrayOfIndices[4]).toEqual(searchResult3[4]);
