@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>Andela Inverted Index Generator</title>
+  <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet" type="text/css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+  <script type="text/javascript" src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+  <link rel="stylesheet" type="text/css" href="css/style.css">
+</head>
+
+<body ng-app="InvertedIndex" ng-controller="InvertedIndexController as IICtrl">
+  <div class="container">
+    <!-- header starts here -->
+    <div class="row">
+      <div class="col-md-4 col-sm-4">
+        <a href="index.html"><img src="https://3xyh3sqxv063a8xzo5uk2zn1-wpengine.netdna-ssl.com/wp-content/uploads/2016/01/Andela-logo-landscape-blue-400px.png" alt="page_logo" class="logo" /></a>
+      </div>
+      <div class="col-md-8 col-sm-8">
+        <h1 class="index_header"> INVERTED INDEX APP </h1>
+      </div>
+    </div>
+    <!-- header ends here -->
+    <!-- descripttion -->
+    <h3> How to Use </h3>
+    <p> This app simply helps you to create an index for any file you upload. You can upload files singly or in batch, immediately
+      the files are read, the generated index for the last file in the batch is being shown. To view index for others, simply
+      click on their buttons by the left. Below the buttons shows the content of the file whose index is currently being
+      shown. You can also search the file for entering the sample data shown or yours. The search can be performed on a single
+      or multiple files.
+    </p>
+    <!-- description ends -->
+    <!--body starts here -->
+    <div class="row">
+      <!-- List of json files start here -->
+      <div class="col-md-3 col-sm-3 sub_title">
+        <h4> List of JSON Files </h4>
+        <div class="row file_box">
+          <div class="col-md-12 col-sm-12">
+            <form>
+              <!-- file upload form starts here -->
+              <input type="file" id="files" name="files" ng-model="files" ng-click="resetProgress()" accept=".json" multiple="multiple"
+                class="form-control" required/>
+              <button ng-click="upload()" class="button"> Create Index</button>
+            </form>
+            <div id="progress_bar">
+              <div>Progress: <label class="percent">0%</label></div>
+            </div>
+            <div>
+              <!-- list starts here -->
+              <h5 class="brick"> File(s) Selected </h5>
+              <p id="file_count">
+                <span ng-if="file_names.length === 0">None</span>
+                <button ng-repeat="file_name in  file_names" ng-click="fileSelected(file_name)" class="file_list"> {{ file_name }}</button>
+              </p>
+              <!-- list ends here -->
+            </div>
+            <div class="drop-box" ng-bind-html="trusted_html_content">No File Read Yet</div>
+            <!-- file upload form ends here -->
+          </div>
+        </div>
+      </div>
+      <!-- List of json files ends here -->
+      <!-- Index starts here -->
+      <div class="col-md-6 col-sm-6 sub_title">
+        <h4> Index </h4>
+        <!-- generated index table starts -->
+        <div style="overflow-x:auto">
+          <table>
+            <tr>
+              <th ng-repeat="term in terms" ng-if="terms.length > 1">{{ term }}</th>
+            </tr>
+            <tr ng-repeat="each_index_display in index_display">
+              <td ng-repeat="indice in each_index_display track by $index">{{ indice }}</td>
+            </tr>
+          </table>
+        </div>
+      </div>
+      <!-- generated inde tables ends here -->
+      <!-- Index ends here -->
+      <!-- Search starts here -->
+      <div class="col-md-3 col-sm-3 sub_title">
+        <h4> Search </h4>
+        <!-- search form -->
+        <form name="search_file">
+          <span class="file_to" class="brick">Enter words to search e.g. ['a', 'alice'],'book','me',['help']</span>
+          <input type="text" name="search_words" id="search_words" class="form-control search" ng-model="search_strings" required>
+          <span class="file_to" ng-if="file_names.length > 0" class="brick"> Select File(s) to Search </span>
+          <select ng-if="file_names.length > 0" id="selected_file" name="selected_file[]" ng-model="selected_file" ng-options="fn for fn in file_names"
+            multiple="multiple" required>
+            </select>
+            <button ng-click="search()" class="button" class="file_to">Search Index</button>
+        </form>
+        <div style="overflow-x:auto" ng-repeat="each_index_search_display in index_search_display">
+          <table>
+            <tr ng-repeat="each_item_index_search_display in each_index_search_display track by $index" ng-if="each_index_search_display.length > 1">
+              <td ng-repeat="col in each_item_index_search_display track by $index">{{ col }}</td>
+            </tr>
+          </table>
+        </div>
+      </div>
+      <!-- Search ends here -->
+    </div>
+    <!-- footer starts here -->
+    <div class="col-md-12 col-sm-12 footer">
+      <p class="copyright"> &copy Andela Talent Accelerators </p>
+    </div>
+    <!-- footer ends here -->
+  </div>
+  <!-- body ends here -->
+  <script src="https://code.angularjs.org/1.4.9/angular.min.js"></script>
+  <script src="https://rawgit.com/dwmkerr/angular-modal-service/master/dst/angular-modal-service.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/angular-sanitize/1.6.2/angular-sanitize.js"></script>
+  <script src="/build/bundle.js"></script>
+  <!-- <script src="/js/app.js"></script> -->
+</body>
+
+</html>
