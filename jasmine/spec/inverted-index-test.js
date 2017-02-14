@@ -2,7 +2,7 @@
 * test suites for the 
 * inverted index project 
 */
-import InvertedIndex from '../lib/js/inverted-index.js';
+import InvertedIndex from '../../src/js/inverted-index.js';
 import book1 from './json_files/books1.json'; 
 import book2 from './json_files/books2.json'; 
 import book3 from './json_files/books3.json'; 
