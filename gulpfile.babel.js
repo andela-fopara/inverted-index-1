@@ -14,7 +14,7 @@ const Server = karma.Server;
 
 const port = process.env.PORT || 8004;
 
-var appServer = connect(),
+let appServer = connect(),
     jasmineTestServer = connect();
 
 gulp.task('appConnect', appServer.server({

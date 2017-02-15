@@ -167,8 +167,6 @@ nameSpace.controller('InvertedIndexController', ['$scope', '$sce', 'ModalService
       $scope.showErrorModal();
     }
     $scope.index = $scope.invertedIndex.getIndex();
-
-
   };
 
   $scope.prepareSearchIndexViewComponents = (searchWordsArray, searchResult, counter) => {
